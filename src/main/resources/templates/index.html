@@ -3,12 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
+{{^loginUser}}
 <a href="/oauth2/authorization/google" class="btn btn-light active">google login</span></a>
 <a href="/oauth2/authorization/naver" class="btn btn-success active">naver login</a>
+<a href="/oauth2/authorization/kakao" class="btn btn-warning active">kakao login</a>
 <span id="User">GUEST</span>
+{{/loginUser}}
+{{#loginUser}}
+<a href="/oauth2/authorization/kakao" class="btn btn-Dark active">{{loginUser}}</a>
 <a class="btn btn-danger active" href="/logout">logout </a>
+
+{{/loginUser}}
 
 </body>
 </html>
