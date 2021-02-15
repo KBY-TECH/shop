@@ -8,6 +8,7 @@ import com.team_project.shop.domain.BaseEntity;
 import com.team_project.shop.domain.user.Role;
 import com.team_project.shop.domain.user.Users;
 
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @Entity
-@AttributeOverride(name="id", column= @Column(name="IMAGE_ID"))
+@AttributeOverride(name="id", column= @Column(name = "image_id" ) )
 public class Images extends BaseEntity{
 
 	@Column(nullable = false)
@@ -24,5 +25,12 @@ public class Images extends BaseEntity{
 	
 	@Column(nullable = false)
 	private String imageURL;
-	
+
+	@Builder
+	public Images(String imageName, String imageURL){
+		this.imageName = imageName;
+		this.imageURL = imageURL;
+	}
+
+
 }

@@ -3,26 +3,17 @@ package com.team_project.shop.domain.product;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 
 import com.team_project.shop.domain.BaseEntity;
 import com.team_project.shop.domain.user.Role;
 import com.team_project.shop.domain.user.Users;
 
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-//작성자 - 이득행
-//상품 테이블에 필요한 카테고리 정보를 구현하기 위해 임시로 작성.
 @EqualsAndHashCode
 @NoArgsConstructor
 @Getter
@@ -32,11 +23,20 @@ public class Category extends BaseEntity{
 	
 	@Column(nullable = false)
 	private String name;
-	
-	@ManyToMany
-	@JoinTable(name="CATEGORY_PRODUCT", 
-		joinColumns = @JoinColumn(name="CATEGORY_ID"),
-		inverseJoinColumns = @JoinColumn(name="PRODUCT_ID"))
-	private List<Products> product = new ArrayList<Products>();
-	
+
+	@ManyToOne
+	@JoinColumn(name="PARENT_ID")
+	private Category parent;
+
+	@ManyToMany(mappedBy = "categories")
+	private List<Products> products = new ArrayList<Products>();
+
+	@Builder
+	public Category(String name){
+		this.name = name;
+	}
+
+	public void setParent(Category category){
+		this.parent = category;
+	}
 }

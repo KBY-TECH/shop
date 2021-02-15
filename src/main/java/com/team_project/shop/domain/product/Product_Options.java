@@ -9,6 +9,7 @@ import javax.persistence.OneToOne;
 
 import com.team_project.shop.domain.BaseEntity;
 
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ public class Product_Options extends BaseEntity{
 	
 	@ManyToOne
 	@JoinColumn(name="PRODUCT_ID")
-	private Long productID;
+	private Products product;
 	
 	@OneToOne
 	@JoinColumn(name="MAIN_IMAGE")
@@ -40,4 +41,14 @@ public class Product_Options extends BaseEntity{
 	
 	@Column(nullable = false)
 	private Long stock;
+
+	@Builder
+	public Product_Options(String optionName, Products product,Images mainImage, Images detailImage,  Long price, Long stock){
+		this.optionName = optionName;
+		this.product = product;
+		this.mainImage = mainImage;
+		this.detailImage = detailImage;
+		this.price = price;
+		this.stock = stock;
+	}
 }
