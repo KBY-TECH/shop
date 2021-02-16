@@ -7,6 +7,4 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface ProductsRepository extends JpaRepository<Products,Long> {
-    @Transactional
-    Products findByProductId(Long productId);
 }
