@@ -8,15 +8,13 @@ import com.team_project.shop.domain.BaseEntity;
 import com.team_project.shop.domain.user.Role;
 import com.team_project.shop.domain.user.Users;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Getter
 @Entity
+@ToString
 @AttributeOverride(name="id", column= @Column(name = "image_id" ) )
 public class Images extends BaseEntity{
 
