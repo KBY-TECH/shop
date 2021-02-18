@@ -1,15 +1,15 @@
 package com.team_project.shop.domain.user;
 
 import com.team_project.shop.domain.BaseEntity;
+import com.team_project.shop.domain.middleEntity.User_Coupon;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.*;
 
-@EqualsAndHashCode
 @NoArgsConstructor
 @Getter
 @Entity
@@ -27,6 +27,9 @@ public class Users extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    private List<User_Coupon> userCouponList;
 
     @Builder
     public Users(String name, String email, String picture, Role role) {

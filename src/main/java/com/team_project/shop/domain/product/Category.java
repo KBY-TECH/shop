@@ -24,6 +24,9 @@ public class Category extends BaseEntity{
 	@Column(nullable = false)
 	private String name;
 
+	@Enumerated(EnumType.STRING)
+	private Classification classification;
+
 	@ManyToOne
 	@JoinColumn(name="PARENT_ID")
 	private Category parent;
