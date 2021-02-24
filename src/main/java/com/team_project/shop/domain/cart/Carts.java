@@ -33,8 +33,7 @@ public class Carts extends BaseEntity {
         this.quantity = quantity;
     }
 
-    public void update(Long quantity, Product_Options productOption){
+    public void update(Long quantity){
         this.quantity = quantity;
-        this.productOption = productOption;
     }
 }
