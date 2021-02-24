@@ -1,5 +1,6 @@
 package com.team_project.shop.domain.user;
 
+import com.team_project.shop.domain.Address.Address;
 import com.team_project.shop.domain.BaseEntity;
 import com.team_project.shop.domain.middleEntity.User_Coupon;
 import lombok.Builder;
@@ -31,6 +32,8 @@ public class Users extends BaseEntity {
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     private List<User_Coupon> userCouponList;
 
+    private String defaultAddress;
+
     @Builder
     public Users(String name, String email, String picture, Role role) {
         this.name = name;
@@ -44,6 +47,10 @@ public class Users extends BaseEntity {
         this.name = name;
         this.picture = picture;
         return this;
+    }
+
+    public void changeDefaultAddress(String address){
+        this.defaultAddress = address;
     }
 
     public String getRoleKey() {
