@@ -14,10 +14,11 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Entity
+@ToString
 @AttributeOverride(name="id", column= @Column(name="PRODUCT_ID"))
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name="PRODUCT_TYPE")
-public class Products extends BaseEntity{
+public class Products extends BaseEntity {
 	
 	@Column(nullable = false)
 	private String name;
@@ -29,24 +30,32 @@ public class Products extends BaseEntity{
 	@ManyToMany
 	@JoinTable(name="CATEGORY_PRODUCT",
 			joinColumns = @JoinColumn(name="PRODUCT_ID"),
-			inverseJoinColumns = @JoinColumn(name="CATEGORY_ID")			)
+			inverseJoinColumns = @JoinColumn(name="CATEGORY_ID"))
 	private List<Category> categories = new ArrayList<>();
 
+	public void update(String name){
+		this.name = name;
+	}
+
 	@Builder
-	public Products(String name, Users user, Category category){
+	public Products(String name, Users user, Category category) {
 		this.name = name;
 		this.user = user;
 
 		categories.add(category);
 		category.getProducts().add(this);
-		while(category.getParent() != null){
+		while(category.getParent() != null) {
 			category = category.getParent();
 			categories.add(category);
 			category.getProducts().add(this);
 		}
 	}
 
-
-
+	public boolean doesIncludeCategory(Category category) {
+		for(Category includingCategory : categories) {
+			if (category.equals(includingCategory)) return true;
+		}
+		return false;
+	}
 
 }

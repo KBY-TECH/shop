@@ -49,18 +49,34 @@ public class Product_Options extends BaseEntity{
 		this.detailImage = detailImage;
 		this.price = price;
 		this.stock = stock;
-		this.state = "ONSALE";
+		if(stock>0)	this.state = "ONSALE";
+		else this.state = "OUTOFSTOCK";
+	}
+
+	public void update(String optionName, Images mainImage, Images detailImage, Long price, Long stock, String State){
+		this.optionName = optionName;
+		this.mainImage = mainImage;
+		this.detailImage = detailImage;
+		this.price = price;
+		this.stock = stock;
+		this.state = state;
 	}
 
 	//재고가 부족할 시 서비스를 통해 에러메시지를 전달할 수 있도록 함
 	public void removeStock(Long quantity) throws ShopException {
+		if (this.state.equals("SUSPENSION")) throw new ShopException("판매 중지된 상품", 100);
+
 		long restStock = this.stock - quantity;
-		if(restStock <0){
+		if (restStock <0){
 			throw new ShopException("재고 부족",200);
-		}else if(restStock==0){
+		}
+		else if(restStock==0) {
 			this.state = "OUTOFSTOCK";
 		}
-
 		this.stock = restStock;
+	}
+
+	public void stopSelling(){
+		this.state = "SUSPENSION";
 	}
 }

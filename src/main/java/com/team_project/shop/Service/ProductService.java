@@ -24,7 +24,7 @@ public class ProductService {
     private final ProductsRepository productsRepository;
 
     @Transactional
-    public Long save(Users user, MultipartHttpServletRequest request){
+    public Long save(Users user, MultipartHttpServletRequest request) {
         Category LeafCategory = categoryRepository.findByName(request.getParameter("CategoryName"));
         Products product = Products.builder()
                 .user(user)
@@ -34,16 +34,16 @@ public class ProductService {
         productsRepository.save(product);
 
         String[] optionNames = request.getParameterValues("optionName");
-        String[] optionPrices = request.getParameterValues("price");
-        String[] optionStocks = request.getParameterValues("stock");
         List<MultipartFile> mainImages = request.getFiles("mainImage");
         List<MultipartFile> detailImages = request.getFiles("detailImage");
+        String[] optionPrices = request.getParameterValues("price");
+        String[] optionStocks = request.getParameterValues("stock");
         for(int i=0; i<optionNames.length; i++){
             Product_Options option = Product_Options.builder()
                     .optionName(optionNames[i])
                     .product(product)
-                    .mainImage(saveMainImage(mainImages.get(i),optionNames[i],product))
-                    .detailImage(saveDetailImage(detailImages.get(i),optionNames[i],product))
+                    .mainImage(saveImage(mainImages.get(i),i+"_main.jpg",product))
+                    .detailImage(saveImage(detailImages.get(i),i+"_detail.jpg",product))
                     .price(Long.parseLong(optionPrices[i]))
                     .stock(Long.parseLong(optionStocks[i]))
                     .build();
@@ -54,29 +54,57 @@ public class ProductService {
         return product.getId();
     }
 
-//    @Transactional
-//    public Long update(Long productId, MultipartHttpServletRequest request){
-//        Products product = productsRepository.findById(productId).get();
-//        //수정가능한 목록: 상품명, 상품 옵션, 검색어, 대표이미지, 상품 기본 정보
-//
-//    }
-//
-//    @Transactional
-//    public Long StopSelling(Long productId){
-//        //상품 판매중지시에는 상품 데이터를 삭제하지 않는다.
-//        //대부분의 쇼핑몰에서 모든 옵션이 품절 상태인 채로 일정 시간 경과되면 완전 삭제됨
-//
-//
-//    }
+    @Transactional
+    public Long update(Long productId, MultipartHttpServletRequest request){
+        //productId는 URL을 통해 받는다.
+        Products product = productsRepository.findById(productId).get();
+        product.update(request.getParameter("productName"));
 
-    private Images saveMainImage(MultipartFile file, String optionName, Products product){
-        return saveImage(file,optionName + "_main.jpg",product);
+        List<Product_Options> options = optionsRepository.findAllByProductId(productId);
+        //수정가능한 목록: 상품명, 상품 옵션, 검색어, 대표이미지, 상품 기본 정보, 판매상태
+        Category LeafCategory = categoryRepository.findByName(request.getParameter("CategoryName"));
+
+        String[] optionNames = request.getParameterValues("optionName");
+        List<MultipartFile> mainImages = request.getFiles("mainImage");
+        List<MultipartFile> detailImages = request.getFiles("detailImage");
+        String[] optionPrices = request.getParameterValues("price");
+        String[] optionStocks = request.getParameterValues("stock");
+        String[] optionState = request.getParameterValues("optionState");
+
+        for (int i=0; i<options.size();i++){
+            Product_Options option = options.get(i);
+            option.update(optionNames[i],
+                    updateImage(option.getMainImage(),mainImages.get(i),i+"_main.jpg",product),
+                    updateImage(option.getDetailImage(),detailImages.get(i),i+"_detail.jpg",product),
+                    Long.parseLong(optionPrices[i]),
+                    Long.parseLong(optionStocks[i]),
+                    optionState[i]);
+        }
+
+        if (options.size()<optionNames.length) {
+            int i = optionNames.length-1;
+            Product_Options option = Product_Options.builder()
+                    .optionName(optionNames[i])
+                    .product(product)
+                    .mainImage(saveImage(mainImages.get(i),i+"_main.jpg",product))
+                    .detailImage(saveImage(detailImages.get(i),i+"_detail.jpg",product))
+                    .price(Long.parseLong(optionPrices[i]))
+                    .stock(Long.parseLong(optionStocks[i]))
+                    .build();
+            optionsRepository.save(option);
+        }
+        return product.getId();
     }
 
-    private Images saveDetailImage(MultipartFile file, String optionName, Products product){
-        return saveImage(file,optionName+"_detail.jpg",product);
+    @Transactional
+    public void StopSelling(Long productId){
+        //상품 판매중지시에는 상품 데이터를 삭제하지 않는다.
+        //모든 상품옵션이 판매중지되면 검색목록에는 뜨지만 상품 상세 페이지로 이동하지 않는다.
+        List<Product_Options> options = optionsRepository.findAllByProductId(productId);
+        for(Product_Options option : options){
+            option.stopSelling();
+        }
     }
-
 
     private Images saveImage(MultipartFile file, String fileName,Products product){
         String path = System.getProperty("user.dir") + "\\bin\\main\\static\\images\\" + product.getId().toString();
@@ -84,6 +112,42 @@ public class ProductService {
         if(!folder.exists()){
             folder.mkdirs();
         }
+        writeImage(file,path,fileName);
+        Images image = Images.builder()
+                .imageName(fileName)
+                .imageURL("/images/"+product.getId().toString()+"/" +fileName)
+                .build();
+        imagesRepository.save(image);
+
+        return image;
+    }
+
+    private Images updateImage(Images image, MultipartFile file, String fileName,Products product){
+        String path = System.getProperty("user.dir")
+                + "\\bin\\main\\static\\images\\"
+                + product.getId().toString();
+        deleteImage(System.getProperty("user.dir")+"/bin/main/static"+ image.getImageURL(),image);
+        writeImage(file,path,fileName);
+        image.update(fileName,"/images/"+product.getId().toString()+"/" +fileName);
+        return image;
+    }
+
+    private void deleteImage(String URL, Images image){
+        File File = new File(URL);
+        if(File.exists()) {
+            if(File.delete()) {
+                System.out.println("삭제 성공");
+            }
+            else {
+                System.out.println("삭제 실패");
+            }
+        }
+        else {
+            System.out.println("파일이 존재하지 않습니다.");
+        }
+    }
+
+    private void writeImage(MultipartFile file, String path, String fileName){
         String fURL = path + "\\" + fileName;
         File destFile = new File(fURL);
         BufferedImage bImage;
@@ -95,12 +159,6 @@ public class ProductService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Images image = Images.builder()
-                .imageName(fileName)
-                .imageURL("/images//"+product.getId().toString()+"/" +fileName)
-                .build();
-        imagesRepository.save(image);
-        return image;
     }
 
 }

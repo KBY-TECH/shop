@@ -30,5 +30,8 @@ public class Images extends BaseEntity{
 		this.imageURL = imageURL;
 	}
 
-
+	public void update(String imageName, String imageURL){
+		this.imageName = imageName;
+		this.imageURL = imageURL;
+	}
 }
