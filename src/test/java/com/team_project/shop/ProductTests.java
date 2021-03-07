@@ -5,15 +5,15 @@ import com.team_project.shop.domain.product.*;
 import com.team_project.shop.domain.user.Role;
 import com.team_project.shop.domain.user.Users;
 import com.team_project.shop.domain.user.UsersRepository;
+import com.team_project.shop.network.request.productSaveRequestDto;
+import com.team_project.shop.web.ProductController;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.mock.web.MockMultipartHttpServletRequest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -43,62 +44,21 @@ public class ProductTests {
     ImagesRepository imagesRepository;
 
     @Autowired
+    ProductController productcontroller;
+
+    @Autowired
     MockMvc mockMvc;
 
     @Test
     @Transactional
     @Rollback(false)
-    public void 카테고리_상품() throws Exception{
+    public void dto테스트() throws Exception{
         //Given
         Category category1 = Category.builder()
-                .name("카테고리1")
+                .name("frozenfood")
                 .build();
         categoryRepository.save(category1);
-        Category category2 = Category.builder()
-                .name("카테고리2")
-                .build();
-        category2.setParent(category1);
-        categoryRepository.save(category2);
-        Category category3 = Category.builder()
-                .name("카테고리3")
-                .build();
-        category3.setParent(category2);
-        categoryRepository.save(category3);
-        //When
-        Products product = Products.builder()
-                .name("상품")
-                .category(category3)
-                .build();
-        productsRepository.save(product);
-
-        //Then
-        Assert.assertEquals(categoryRepository.findByName("카테고리1"), productsRepository.findById(product.getId()).get().getCategories().get(2));
-
-        //상품에 최하위 계층 카테고리 연결시 최상위 계층 카테고리도 저장되어 있는 것을 확인.
-    }
-
-    @Test
-    @Transactional
-    @Rollback(false)
-    public void 상품등록() throws Exception{
-        //Given: 테스트할 상황
-        Category category1 = Category.builder()
-                .name("카테고리1")
-                .build();
-        categoryRepository.save(category1);
-        Category category2 = Category.builder()
-                .name("카테고리2")
-                .build();
-        category2.setParent(category1);
-        categoryRepository.save(category2);
-        Category category3 = Category.builder()
-                .name("카테고리3")
-                .build();
-        category3.setParent(category2);
-        categoryRepository.save(category3);
-
-        MultipartFile file = new MockMultipartFile("mainImage",new FileInputStream(new File("C:\\Users\\niveu\\Desktop\\Spring study\\JDBC1.PNG")));
-        MultipartFile file2 = new MockMultipartFile("detailImage",new FileInputStream(new File("C:\\Users\\niveu\\Desktop\\Spring study\\Untitled Diagram.png")));
+        
         Users user = Users.builder()
                 .name("userName")
                 .email("mail")
@@ -107,52 +67,67 @@ public class ProductTests {
                 .build();
         usersRepository.save(user);
 
-        //When: 테스트 대상
-        MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest();
-        request.addParameter("CategoryName","카테고리3");
-        request.addParameter("productName","상품이름");
-        request.addParameter("optionName","옵션1");
-        request.addParameter("price","1000");
-        request.addParameter("stock","50");
-        request.addFile(file);
-        request.addFile(file2);
-
-        Long productId = productservice.save(user,request);
-
-        //Then: 결과검증
-        Products result = productsRepository.findById(productId).get();
-        List<Product_Options> options = optionsRepository.findAllByProductId(result.getId());
-        System.out.println("Option List: \n"+options);
-
-        Assert.assertEquals("0_main.jpg",options.get(0).getMainImage().getImageName() );
-
-    }
-
-    @Test
-    @Transactional
-    @Rollback(false)
-    public void 상품수정() throws Exception{
-        //Given
-        Category category1 = Category.builder()
-                .name("카테고리1")
-                .build();
-        categoryRepository.save(category1);
-        Category category2 = Category.builder()
-                .name("카테고리2")
-                .build();
-        category2.setParent(category1);
-        categoryRepository.save(category2);
-        Category category3 = Category.builder()
-                .name("카테고리3")
-                .build();
-        category3.setParent(category2);
-        categoryRepository.save(category3);
         MultipartFile file = new MockMultipartFile("mainImage",
                 new FileInputStream(
                         new File("C:\\Users\\niveu\\Desktop\\Spring study\\JDBC1.PNG")));
         MultipartFile file2 = new MockMultipartFile("detailImage",
                 new FileInputStream(
                         new File("C:\\Users\\niveu\\Desktop\\Spring study\\Untitled Diagram.png")));
+        List<MultipartFile> mainImages = new ArrayList<>();
+        mainImages.add(file);
+        mainImages.add(file);
+        List<MultipartFile> detailImages = new ArrayList<>();
+        detailImages.add(file2);
+        detailImages.add(file2);
+
+
+
+
+        //When
+        productSaveRequestDto.FrozenFoodsDto dto =
+                productSaveRequestDto.FrozenFoodsDto.builder()
+                        .productDto(productSaveRequestDto.ProductOptionsDto.builder()
+                                .productName("냉동식품1")
+                                .optionName(new String[]{"옵션1", "옵션2"})
+                                .mainImage(mainImages)
+                                .detailImage(detailImages)
+                                .price(new String[]{"1000","2000"})
+                                .stock(new String[]{"50","30"})
+                                .build())
+                        .foodsDto(productSaveRequestDto.FoodsDto.builder()
+                                .producer(new String[]{"한국","한국"})
+                                .qualityMaintenanceDate(new String[]{"1년","1년"})
+                                .importedFood(new String[]{"해당없음","해당없음"})
+                                .precaution(new String[]{"컨텐츠 참조","컨텐츠 참조"})
+                                .consumerCounselingPhoneNum(new String[]{"쿠팡고객센터 1577-7011","쿠팡고객센터 1577-7011"})
+
+
+                                .build())
+                        .foodType(new String[]{"만두","만두"})
+                        .capacityByPackingUnit(new String[]{"1kg, 1개","2kg, 1개"})
+                        .materialContent(new String[]{"컨텐츠 참조","컨텐츠 참조"})
+                        .nutritionalIngredients(new String[]{"해당없음","해당없음"})
+                        .geneticallyModified(new String[]{"해당없음", "해당없음"})
+                        .build();
+
+        //Then
+        productcontroller.createFrozenFood(dto,user);
+        List<Product_Options> results= optionsRepository.findAllByProductId(1L);
+        System.out.println("result : \n"+results);
+        Assert.assertNotNull(results);
+
+    }
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void dto테스트2() throws Exception{
+        //Given
+        Category category1 = Category.builder()
+                .name("BackPack")
+                .build();
+        categoryRepository.save(category1);
+
         Users user = Users.builder()
                 .name("userName")
                 .email("mail")
@@ -161,50 +136,48 @@ public class ProductTests {
                 .build();
         usersRepository.save(user);
 
-        Products product = Products.builder()
-                .name("상품이름")
-                .user(user)
-                .category(category3)
-                .build();
-        productsRepository.save(product);
+        MultipartFile file = new MockMultipartFile("mainImage",
+                new FileInputStream(
+                        new File("C:\\Users\\niveu\\Desktop\\Spring study\\JDBC1.PNG")));
+        MultipartFile file2 = new MockMultipartFile("detailImage",
+                new FileInputStream(
+                        new File("C:\\Users\\niveu\\Desktop\\Spring study\\Untitled Diagram.png")));
+        List<MultipartFile> mainImages = new ArrayList<>();
+        mainImages.add(file);
+        mainImages.add(file);
+        List<MultipartFile> detailImages = new ArrayList<>();
+        detailImages.add(file2);
+        detailImages.add(file2);
 
-        Images mainImage0 = Images.builder()
-                .imageName("0_main.jpg")
-                .imageURL("/images/0/0_main.jpg")
-                .build();
-        imagesRepository.save(mainImage0);
-        Images detailImage0 = Images.builder()
-                .imageName("0_detail.jpg")
-                .imageURL("/images/0/0_detail.jpg")
-                .build();
-        imagesRepository.save(detailImage0);
-        Product_Options option = Product_Options.builder()
-                .optionName("옵션1")
-                .product(product)
-                .mainImage(mainImage0)
-                .detailImage(detailImage0)
-                .price(1000L)
-                .stock(50L)
-                .build();
-
-        optionsRepository.save(option);
         //When
-        MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest();
-        request.addParameter("productName","상품이름2");
-        request.addParameter("optionName","옵션1.2","옵션2");
-        request.addParameter("price","200","300");
-        request.addParameter("stock","10","20");
-        request.addParameter("optionState","OUTOFSTOCK","ONSALE");
-        request.addFile(file);
-        request.addFile(file2);
-        request.addFile(file);
-        request.addFile(file2);
-        Long productId = productservice.update(product.getId(),request);
-        Products result = productsRepository.findById(productId).get();
-        System.out.println(result);
-        List<Product_Options> options = optionsRepository.findAllByProductId(productId);
-        System.out.println("OPTION LIST:\n"+options);
+        productSaveRequestDto.BagDto backPackDto =
+                productSaveRequestDto.BagDto.builder()
+                        .productDto(productSaveRequestDto.ProductOptionsDto.builder()
+                                .productName("가방1")
+                                .optionName(new String[]{"옵션1", "옵션2"})
+                                .mainImage(mainImages)
+                                .detailImage(detailImages)
+                                .price(new String[]{"1000","2000"})
+                                .stock(new String[]{"50","30"})
+                                .build())
+                        .accessoriesDto(productSaveRequestDto.AccessoriesDto.builder()
+                                .kind(new String[]{"크로스백","백팩"})
+                                .material(new String[]{"상품 상세 페이지 참조","상품 상세 페이지 참조"})
+                                .size(new String[]{"상품 상세 페이지 참조","상품 상세 페이지 참조"})
+                                .producer(new String[]{"상품 상세 페이지 참조","상품 상세 페이지 참조"})
+                                .madeIn(new String[]{"상품 상세 페이지 참조","상품 상세 페이지 참조"})
+                                .precautions(new String[]{"상품 상세 페이지 참조","상품 상세 페이지 참조"})
+                                .qualityAssuranceStandard(new String[]{"상품 상세 페이지 참조","상품 상세 페이지 참조"})
+                                .afterServiceAddress(new String[]{"상품 상세 페이지 참조","상품 상세 페이지 참조"})
+                                .build())
+                        .color(new String[]{"하양","빨강"})
+                        .build();
+
         //Then
-        Assert.assertNotNull(options.get(1));
+        productcontroller.createBag(backPackDto,user);
+        List<Product_Options> results= optionsRepository.findAllByProductId(1L);
+        System.out.println("result : \n"+results);
+        Assert.assertNotNull(results);
+
     }
 }
