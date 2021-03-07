@@ -48,12 +48,4 @@ public class Products extends BaseEntity {
 			category.getProducts().add(this);
 		}
 	}
-
-	public boolean doesIncludeCategory(Category category) {
-		for(Category includingCategory : categories) {
-			if (category.equals(includingCategory)) return true;
-		}
-		return false;
-	}
-
 }

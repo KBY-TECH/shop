@@ -7,6 +7,7 @@ import com.team_project.shop.domain.user.Users;
 import com.team_project.shop.domain.user.UsersRepository;
 import com.team_project.shop.network.request.productSaveRequestDto;
 import com.team_project.shop.web.ProductController;
+import org.hamcrest.core.IsEqual;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +49,59 @@ public class ProductTests {
 
     @Autowired
     MockMvc mockMvc;
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void 상품_카테고리테스트() throws Exception{
+        //Given
+        Category category1 = Category.builder()
+                .name("카테고리1")
+                .build();
+        categoryRepository.save(category1);
+        Category category2 = Category.builder()
+                .name("카테고리2")
+                .build();
+        categoryRepository.save(category2);
+        Category category3 = Category.builder()
+                .name("카테고리3")
+                .build();
+        category3.setParent(category1);
+        categoryRepository.save(category3);
+
+        Users user = Users.builder()
+                .name("userName")
+                .email("mail")
+                .picture("picture")
+                .role(Role.USER)
+                .build();
+        usersRepository.save(user);
+
+        //When
+        Products product1 = Products.builder()
+                .name("상품1")
+                .category(category1)
+                .user(user)
+                .build();
+        productsRepository.save(product1);
+        Products product2 = Products.builder()
+                .name("상품2")
+                .category(category2)
+                .user(user)
+                .build();
+        productsRepository.save(product2);
+        Products product3 = Products.builder()
+                .name("상품3")
+                .category(category3)
+                .user(user)
+                .build();
+        productsRepository.save(product3);
+        //Then
+        List<Products> results = category1.getProducts();
+        System.out.println(results);
+        Assert.assertTrue(results.contains(product1));
+
+    }
 
     @Test
     @Transactional
