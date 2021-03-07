@@ -16,8 +16,6 @@ import lombok.*;
 @Entity
 @ToString
 @AttributeOverride(name="id", column= @Column(name="PRODUCT_ID"))
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name="PRODUCT_TYPE")
 public class Products extends BaseEntity {
 	
 	@Column(nullable = false)

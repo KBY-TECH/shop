@@ -2,10 +2,10 @@ package com.team_project.shop.domain.product;
 
 import javax.persistence.*;
 
-import com.team_project.shop.config.ProductStateAttribueConverter;
 import com.team_project.shop.config.ShopException;
 import com.team_project.shop.domain.BaseEntity;
 
+import com.team_project.shop.domain.product.Informations.Informations;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
@@ -38,45 +38,52 @@ public class Product_Options extends BaseEntity{
 	private Long stock;
 
 	@Column(nullable = false)
-	@Convert(converter = ProductStateAttribueConverter.class)
-	private String state;
+	@Enumerated(EnumType.STRING)
+	private ProductState state;
+
+	@OneToOne
+	@JoinColumn(name="INFORMATION_ID")
+	private Informations information;
+
 
 	@Builder
-	public Product_Options(String optionName, Products product,Images mainImage, Images detailImage,  Long price, Long stock){
+	public Product_Options(String optionName, Products product,Images mainImage, Images detailImage,  Long price, Long stock, Informations information){
 		this.optionName = optionName;
 		this.product = product;
 		this.mainImage = mainImage;
 		this.detailImage = detailImage;
 		this.price = price;
 		this.stock = stock;
-		if(stock>0)	this.state = "ONSALE";
-		else this.state = "OUTOFSTOCK";
+		if(stock>0)	this.state = ProductState.ONSALE;
+		else this.state = ProductState.OUTOFSTOCK;
+		this.information = information;
 	}
 
-	public void update(String optionName, Images mainImage, Images detailImage, Long price, Long stock, String State){
+	public void update(String optionName, Images mainImage, Images detailImage, Long price, Long stock, String State, Informations information){
 		this.optionName = optionName;
 		this.mainImage = mainImage;
 		this.detailImage = detailImage;
 		this.price = price;
 		this.stock = stock;
 		this.state = state;
+		this.information = information;
 	}
 
 	//재고가 부족할 시 서비스를 통해 에러메시지를 전달할 수 있도록 함
 	public void removeStock(Long quantity) throws ShopException {
-		if (this.state.equals("SUSPENSION")) throw new ShopException("판매 중지된 상품", 100);
+		if (this.state==ProductState.SUSPENSION) throw new ShopException("판매 중지된 상품", 100);
 
 		long restStock = this.stock - quantity;
 		if (restStock <0){
 			throw new ShopException("재고 부족",200);
 		}
 		else if(restStock==0) {
-			this.state = "OUTOFSTOCK";
+			this.state = ProductState.OUTOFSTOCK;
 		}
 		this.stock = restStock;
 	}
 
 	public void stopSelling(){
-		this.state = "SUSPENSION";
+		this.state = ProductState.SUSPENSION;
 	}
 }
