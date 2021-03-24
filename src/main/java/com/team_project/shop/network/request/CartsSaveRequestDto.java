@@ -11,11 +11,12 @@ import lombok.NoArgsConstructor;
 @Getter
 public class CartsSaveRequestDto {
 
+    private Long productOptionId;
     private Long quantity;
 
     @Builder
-    public CartsSaveRequestDto(Long quantity){
-        this.quantity = quantity;
+    public CartsSaveRequestDto(Long quantity, Long productOptionId){
+        this.quantity = quantity; this.productOptionId = productOptionId;
     }
 
     public Carts toEntity(Users user, Product_Options productOptions){

@@ -9,14 +9,17 @@ import com.team_project.shop.network.request.CartsSaveRequestDto;
 import com.team_project.shop.network.request.CartsUpdateRequestDto;
 import com.team_project.shop.network.response.CartsResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class CartsService {
+public class CartService {
     private final CartsRepository cartsRepository;
     private final Product_OptionsRepository productOptionsRepository;
 
@@ -25,8 +28,8 @@ public class CartsService {
         그 외에는 저장된 carts id값 리턴
      */
     @Transactional
-    public Long save(Users user, Long productOptionId, CartsSaveRequestDto requestDto){
-        Optional<Product_Options> productOption = productOptionsRepository.findById(productOptionId);
+    public Long save(Users user,CartsSaveRequestDto requestDto){
+        Optional<Product_Options> productOption = productOptionsRepository.findById(requestDto.getProductOptionId());
         if(!productOption.isPresent())
             return 0l;
         return cartsRepository.save(requestDto.toEntity(user, productOption.get())).getId();
@@ -70,5 +73,12 @@ public class CartsService {
         return CartsResponseDto.builder()
                 .carts(cart.get())
                 .build();
+    }
+
+    //이부분은 null check 필요x 컬렉션은 비어있는지만 체크하면되니까
+    @Transactional
+    public List<CartsResponseDto> findByUserId(Long userId){
+        List<Carts> cartsList = cartsRepository.findByUserId(userId);
+        return cartsList.stream().map(CartsResponseDto::new).collect(Collectors.toList());
     }
 }

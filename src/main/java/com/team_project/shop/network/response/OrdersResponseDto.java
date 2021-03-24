@@ -27,6 +27,7 @@ public class OrdersResponseDto {
     private List<OrderDetailsResponseDto> orderDetailsResponseDtos;
     private String createdDate;
     private String modifiedDate;
+
     @Builder
     public OrdersResponseDto(Orders orders){
         this.id = orders.getId();

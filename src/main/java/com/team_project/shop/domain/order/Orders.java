@@ -24,6 +24,10 @@ public class Orders extends BaseEntity {
 
     private Long deliveryFee;
 
+    private Long totalPayment;
+
+    private String destination;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
@@ -31,19 +35,23 @@ public class Orders extends BaseEntity {
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<OrderDetails> orderDetails;
 
     @Builder
-    public Orders(Users user, Long totalPrice, Long deliveryFee, Coupon coupon){
+    public Orders(Users user, Long totalPrice, Long deliveryFee, Coupon coupon, String destination, Long totalPayment){
         this.user = user;
         this.totalPrice = totalPrice;
         this.deliveryFee = deliveryFee;
+        this.totalPayment = totalPayment;
         this.coupon = coupon;
         this.orderStatus = OrderStatus.NEW;
+        this.destination = destination;
     }
 
     public void update(OrderStatus status){
         this.orderStatus = status;
     }
+
+    public void addCoupon(Coupon coupon){this.coupon = coupon;}
 }
