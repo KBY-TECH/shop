@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -74,15 +75,10 @@ public class CartService {
                 .build();
     }
 
-    //이부분은 Optional null check 하는 거 좀 더 생각해 보고 완성하기
-//    @Transactional
-//    public List<CartsResponseDto> findByUser(Users user){
-//        List<Optional<Carts>> cartsList = cartsRepository.findByUser(user);
-//
-//    }
-
-
-    //cart갯수 조회하는 서비스 함수 추가
-
-
+    //이부분은 null check 필요x 컬렉션은 비어있는지만 체크하면되니까
+    @Transactional
+    public List<CartsResponseDto> findByUserId(Long userId){
+        List<Carts> cartsList = cartsRepository.findByUserId(userId);
+        return cartsList.stream().map(CartsResponseDto::new).collect(Collectors.toList());
+    }
 }

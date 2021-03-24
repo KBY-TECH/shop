@@ -133,8 +133,8 @@ public class CartsRepositoryTest {
 
 
         //when
-        List<Optional<Carts>> cartsList1 = cartsRepository.findByUser(user);    //두개 카트에 넣음
-        List<Optional<Carts>> cartsList2 = cartsRepository.findByUser(seller);  //카트에 넣은거 없음
+        List<Carts> cartsList1 = cartsRepository.findByUser(user);    //두개 카트에 넣음
+        List<Carts> cartsList2 = cartsRepository.findByUser(seller);  //카트에 넣은거 없음
 
         //then
         assertThat(cartsList1.size()).isEqualTo(2l);
