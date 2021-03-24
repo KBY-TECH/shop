@@ -160,10 +160,10 @@ public class OrderDetailsRepositoryTest {
         orderDetailsRepository.save(orderDetail3);
 
         //when
-        List<Optional<Orders>> orderList = ordersRepository.findByUserName(user.getName());
+        List<Orders> orderList = ordersRepository.findByUserName(user.getName());
         //order1 order2순으로 주문되어있음
-        Orders savedOrder1 = orderList.get(0).get();
-        Orders savedOrder2 = orderList.get(1).get();
+        Orders savedOrder1 = orderList.get(0);
+        Orders savedOrder2 = orderList.get(1);
 
         //then
         assertThat(savedOrder1.getOrderDetails().size()).isEqualTo(2);

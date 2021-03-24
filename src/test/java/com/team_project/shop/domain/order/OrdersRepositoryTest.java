@@ -135,12 +135,12 @@ public class OrdersRepositoryTest {
         ordersRepository.save(order1);
 
         //when
-        List<Optional<Orders>> orderList1 = ordersRepository.findByUserName(user.getName());
-        List<Optional<Orders>> orderList2 = ordersRepository.findByUserName(seller.getName());
+        List<Orders> orderList1 = ordersRepository.findByUserName(user.getName());
+        List<Orders> orderList2 = ordersRepository.findByUserName(seller.getName());
 
         //then
         assertThat(orderList1.size()).isEqualTo(1);
-        assertThat(orderList1.get(0).get().getId()).isEqualTo(order1.getId());
+        assertThat(orderList1.get(0).getId()).isEqualTo(order1.getId());
         assertThat(orderList2.size()).isEqualTo(0);
     }
 

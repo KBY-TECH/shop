@@ -14,10 +14,13 @@ import com.team_project.shop.network.request.OrdersUpdateRequestDto;
 import com.team_project.shop.network.response.OrderDetailsResponseDto;
 import com.team_project.shop.network.response.OrdersResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -70,5 +73,11 @@ public class OrderService {
             return null;    //예외처리방법 알아보기 optional리턴하고 컨트롤러에서 처리할 방향으로 생각 중
         return OrdersResponseDto.builder().orders(order.get()).build();
 
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrdersResponseDto> findByUserId(Long userId) {
+        List<Orders> ordersList = ordersRepository.findByUserId(userId);
+        return ordersList.stream().map(OrdersResponseDto::new).collect(Collectors.toList());
     }
 }
