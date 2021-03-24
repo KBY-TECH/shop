@@ -6,24 +6,24 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.team_project.shop.domain.BaseEntity;
-import com.team_project.shop.domain.user.Role;
-import com.team_project.shop.domain.user.Users;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 @EqualsAndHashCode
 @NoArgsConstructor
 @Getter
 @Entity
 @AttributeOverride(name="id", column= @Column(name="CATEGORY_ID"))
-public class Category extends BaseEntity{	
-	
+public  class Category extends BaseEntity{
+
 	@Column(nullable = false)
 	private String name;
 
+	@Nullable
 	@Enumerated(EnumType.STRING)
 	private Classification classification;
 

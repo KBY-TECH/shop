@@ -1,5 +1,7 @@
 package com.team_project.shop.Service;
 
+import com.team_project.shop.domain.product.Category;
+import com.team_project.shop.domain.product.CategoryRepository;
 import com.team_project.shop.domain.product.*;
 import com.team_project.shop.domain.product.Informations.Informations;
 import com.team_project.shop.domain.product.Informations.InformationsRepository;

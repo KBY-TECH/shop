@@ -47,24 +47,14 @@ public class Coupon extends BaseEntity {
     private String codeCheking(String validCode) {
         while (true) {
             if (!codeDuplicateCheck.containsKey(validCode)) {
+                codeDuplicateCheck.put(validCode,1);
                 return validCode;
             }
             validCode=UUID.randomUUID().toString();
         }
     }
 
-    @Override
-    public String toString() {
-        return "Coupon{" +
-                "code='" + code + '\'' +
-                ", quantity=" + quantity +
-                ", percentage=" + percentage +
-                ", startTime=" + startTime +
-                ", endTime=" + customFormat() +
-                ", activate=" + activate +
-                ", userCouponList=" + userCouponList +
-                '}';
-    }
+
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;

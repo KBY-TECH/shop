@@ -5,6 +5,7 @@ import org.hibernate.dialect.lock.AbstractSelectLockingStrategy;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +30,6 @@ public class CouponTest {
                 .build();
         Coupon couponCreate=couponRepository.save(coupon);
         Assert.assertNotNull(couponCreate);
-        System.out.println(couponCreate.toString());
     }
     @Test
     public void read()
@@ -49,6 +49,7 @@ public class CouponTest {
     }
 
     @Test
+    @DisplayName("coupon 재고 수량 할인율 변경.")
     public void Update()
     {
         Coupon coupon=Coupon.builder()
