@@ -1,7 +1,7 @@
 package com.team_project.shop.web;
 
 import com.team_project.shop.Service.OrderService;
-import com.team_project.shop.Service.UserService;
+import com.team_project.shop.Service.UserService_tmp;
 import com.team_project.shop.config.auth.LoginUser;
 import com.team_project.shop.config.auth.dto.SessionUser;
 import com.team_project.shop.network.request.OrdersSaveRequestDto;
@@ -17,11 +17,11 @@ import java.util.List;
 @RestController
 public class ApiOrderController {
     private final OrderService orderService;
-    private final UserService userService;
+    private final UserService_tmp userServiceTmp;
 
     @PostMapping("")
     public Long save(@LoginUser SessionUser sessionUser, @RequestBody OrdersSaveRequestDto requestDto) {
-        return orderService.save(userService.findById(sessionUser.getId()), requestDto);
+        return orderService.save(userServiceTmp.findById(sessionUser.getId()), requestDto);
     }
 
     @PutMapping("/{orderId}")

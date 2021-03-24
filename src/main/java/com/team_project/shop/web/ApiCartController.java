@@ -1,14 +1,13 @@
 package com.team_project.shop.web;
 
 import com.team_project.shop.Service.CartService;
-import com.team_project.shop.Service.UserService;
+import com.team_project.shop.Service.UserService_tmp;
 import com.team_project.shop.config.auth.LoginUser;
 import com.team_project.shop.config.auth.dto.SessionUser;
 import com.team_project.shop.network.request.CartsSaveRequestDto;
 import com.team_project.shop.network.request.CartsUpdateRequestDto;
 import com.team_project.shop.network.response.CartsResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,11 +17,11 @@ import java.util.List;
 @RestController
 public class ApiCartController {
     private final CartService cartService;
-    private final UserService userService;
+    private final UserService_tmp userServiceTmp;
 
     @PostMapping("")
     public Long save(@LoginUser SessionUser sessionUser, @RequestBody CartsSaveRequestDto requestDto) {
-        return cartService.save(userService.findById(sessionUser.getId()), requestDto);
+        return cartService.save(userServiceTmp.findById(sessionUser.getId()), requestDto);
     }
 
     @PutMapping("/{cartId}")
