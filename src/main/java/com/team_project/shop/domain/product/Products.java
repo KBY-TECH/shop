@@ -40,11 +40,11 @@ public class Products extends BaseEntity {
 		this.name = name;
 		this.user = user;
 
-		categories.add(category);
+		this.categories.add(category);
 		category.getProducts().add(this);
 		while(category.getParent() != null) {
 			category = category.getParent();
-			categories.add(category);
+			this.categories.add(category);
 			category.getProducts().add(this);
 		}
 	}

@@ -58,15 +58,13 @@ public class Product_Options extends BaseEntity{
 		else this.state = ProductState.OUTOFSTOCK;
 		this.information = information;
 	}
-
-	public void update(String optionName, Images mainImage, Images detailImage, Long price, Long stock, String State, Informations information){
+	public void update(String optionName, Images mainImage, Images detailImage, Long price, Long stock, String state){
 		this.optionName = optionName;
 		this.mainImage = mainImage;
 		this.detailImage = detailImage;
 		this.price = price;
 		this.stock = stock;
-		this.state = state;
-		this.information = information;
+		this.state = ProductState.find(state);
 	}
 
 	//재고가 부족할 시 서비스를 통해 에러메시지를 전달할 수 있도록 함
