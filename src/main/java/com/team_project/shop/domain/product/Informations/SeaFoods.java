@@ -20,22 +20,22 @@ import javax.persistence.Entity;
 @AttributeOverride(name="id", column= @Column(name="SEA_FOODS_ID"))
 @DiscriminatorValue("SEA_FOOD")
 public class SeaFoods extends Food {
-    @Column(nullable = false)
+    @Column
     private String foodName;
 
-    @Column(nullable = false)
+    @Column
     private String foodType;
 
-    @Column(nullable = false)
+    @Column
     private String capacityByPackingUnit;
 
-    @Column(nullable = false)
+    @Column
     private String materialContent;
 
-    @Column(nullable = false)
+    @Column
     private String nutritionalIngredients;
 
-    @Column(nullable = false)
+    @Column
     private String geneticallyModified;
 
     @Builder
@@ -45,6 +45,20 @@ public class SeaFoods extends Food {
                     String foodType, String capacityByPackingUnit, String materialContent,
                     String nutritionalIngredients, String geneticallyModified) {
         super(producer, qualityMaintenanceDate, importedFood, precaution, consumerCounselingPhoneNum);
+        this.foodName = foodName;
+        this.foodType = foodType;
+        this.capacityByPackingUnit = capacityByPackingUnit;
+        this.materialContent = materialContent;
+        this.nutritionalIngredients = nutritionalIngredients;
+        this.geneticallyModified = geneticallyModified;
+    }
+
+    public void update(String producer, String qualityMaintenanceDate,
+                    String importedFood, String precaution,
+                    String consumerCounselingPhoneNum, String foodName,
+                    String foodType, String capacityByPackingUnit, String materialContent,
+                    String nutritionalIngredients, String geneticallyModified) {
+        super.update(producer, qualityMaintenanceDate, importedFood, precaution, consumerCounselingPhoneNum);
         this.foodName = foodName;
         this.foodType = foodType;
         this.capacityByPackingUnit = capacityByPackingUnit;

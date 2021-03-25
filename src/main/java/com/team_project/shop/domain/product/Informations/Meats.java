@@ -15,19 +15,19 @@ import javax.persistence.Entity;
 @AttributeOverride(name="id", column= @Column(name="MEATS_FOOD_ID"))
 @DiscriminatorValue("MEAT_FOOD")
 public class Meats extends Food {
-    @Column(nullable = false)
+    @Column
     private String meatPart;
 
-    @Column(nullable = false)
+    @Column
     private String origin;
 
-    @Column(nullable = false)
+    @Column
     private String indication;
 
-    @Column(nullable = false)
+    @Column
     private String composition;
 
-    @Column(nullable = false)
+    @Column
     private String storageMethod;
 
     @Builder
@@ -35,6 +35,17 @@ public class Meats extends Food {
                  String indication, String importedFood, String composition,
                  String storageMethod, String precaution, String consumerCounselingPhoneNum) {
         super(producer,qualityMaintenanceDate,importedFood,precaution,consumerCounselingPhoneNum);
+        this.meatPart = meatPart;
+        this.origin = origin;
+        this.indication = indication;
+        this.composition = composition;
+        this.storageMethod = storageMethod;
+    }
+
+    public void update(String meatPart,String producer, String origin, String qualityMaintenanceDate,
+                 String indication, String importedFood, String composition,
+                 String storageMethod, String precaution, String consumerCounselingPhoneNum) {
+        super.update(producer,qualityMaintenanceDate,importedFood,precaution,consumerCounselingPhoneNum);
         this.meatPart = meatPart;
         this.origin = origin;
         this.indication = indication;

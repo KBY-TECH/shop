@@ -15,7 +15,7 @@ import javax.persistence.Entity;
 @AttributeOverride(name="id", column= @Column(name="BACKPACK_ACCESSORIES_ID"))
 @DiscriminatorValue("BACKPACK_ACCESSORIES")
 public class Bag extends Accessories {
-    @Column(nullable = false)
+    @Column
     private String color;
 
     @Builder
@@ -23,6 +23,14 @@ public class Bag extends Accessories {
                String producer, String madeIn, String precautions,
                String qualityAssuranceStandard, String afterServiceAddress) {
         super(kind,material, size, producer, madeIn,
+                precautions, qualityAssuranceStandard, afterServiceAddress);
+        this.color = color;
+    }
+
+    public void update(String kind, String material, String color, String size,
+               String producer, String madeIn, String precautions,
+               String qualityAssuranceStandard, String afterServiceAddress) {
+        super.update(kind,material, size, producer, madeIn,
                 precautions, qualityAssuranceStandard, afterServiceAddress);
         this.color = color;
     }

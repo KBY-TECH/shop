@@ -16,22 +16,31 @@ import javax.persistence.Entity;
 @AttributeOverride(name="id", column= @Column(name="FOODS_ID"))
 @DiscriminatorValue("FOOD")
 public abstract class Food extends Informations {
-    @Column(nullable = false)
+    @Column
     private String producer;
 
-    @Column(nullable = false)
+    @Column
     private String qualityMaintenanceDate;
 
-    @Column(nullable = false)
+    @Column
     private String importedFood;
 
-    @Column(nullable = false)
+    @Column
     private String precaution;
 
-    @Column(nullable = false)
+    @Column
     private String consumerCounselingPhoneNum;
 
     public Food(String producer, String qualityMaintenanceDate, String importedFood,
+                String precaution, String consumerCounselingPhoneNum) {
+        this.producer = producer;
+        this.qualityMaintenanceDate = qualityMaintenanceDate;
+        this.importedFood = importedFood;
+        this.precaution = precaution;
+        this.consumerCounselingPhoneNum = consumerCounselingPhoneNum;
+    }
+
+    public void update(String producer, String qualityMaintenanceDate, String importedFood,
                 String precaution, String consumerCounselingPhoneNum) {
         this.producer = producer;
         this.qualityMaintenanceDate = qualityMaintenanceDate;

@@ -22,4 +22,11 @@ public class Sportswear extends Clothes {
         super(material, color, size, producer, madeIn,
                 precautions, manufacturedDate, qualityAssuranceStandard, afterServiceAddress);
     }
+
+    public void update(String material, String color, String size,
+                      String producer, String madeIn, String precautions,
+                      String manufacturedDate, String qualityAssuranceStandard, String afterServiceAddress) {
+        super.update(material, color, size, producer, madeIn,
+                precautions, manufacturedDate, qualityAssuranceStandard, afterServiceAddress);
+    }
 }

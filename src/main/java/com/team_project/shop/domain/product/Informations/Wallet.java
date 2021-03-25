@@ -22,4 +22,11 @@ public class Wallet extends Accessories {
         super(kind,material, size, producer, madeIn,
                 precautions, qualityAssuranceStandard, afterServiceAddress);
     }
+
+    public void update(String kind, String material, String size,
+                  String producer, String madeIn, String precautions,
+                  String qualityAssuranceStandard, String afterServiceAddress) {
+        super.update(kind,material, size, producer, madeIn,
+                precautions, qualityAssuranceStandard, afterServiceAddress);
+    }
 }

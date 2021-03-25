@@ -15,34 +15,49 @@ import javax.persistence.Entity;
 @AttributeOverride(name="id", column= @Column(name="CLOTHES_ID"))
 @DiscriminatorValue("CLOTHES")
 public abstract class Clothes extends Informations {
-    @Column(nullable = false)
+    @Column
     private String material;
 
-    @Column(nullable = false)
+    @Column
     private String color;
 
-    @Column(nullable = false)
+    @Column
     private String size;
 
-    @Column(nullable = false)
+    @Column
     private String producer;
 
-    @Column(nullable = false)
+    @Column
     private String madeIn;
 
-    @Column(nullable = false)
+    @Column
     private String precautions;
 
-    @Column(nullable = false)
+    @Column
     private String manufacturedDate;
 
-    @Column(nullable = false)
+    @Column
     private String qualityAssuranceStandard;
 
-    @Column(nullable = false)
+    @Column
     private String afterServiceAddress;
 
     public Clothes(String material, String color, String size,
+                   String producer, String madeIn, String precautions,
+                   String manufacturedDate, String qualityAssuranceStandard,
+                   String afterServiceAddress) {
+        this.material = material;
+        this.color = color;
+        this.size = size;
+        this.producer = producer;
+        this.madeIn = madeIn;
+        this.precautions = precautions;
+        this.manufacturedDate = manufacturedDate;
+        this.qualityAssuranceStandard = qualityAssuranceStandard;
+        this.afterServiceAddress = afterServiceAddress;
+    }
+
+    public void update(String material, String color, String size,
                    String producer, String madeIn, String precautions,
                    String manufacturedDate, String qualityAssuranceStandard,
                    String afterServiceAddress) {
