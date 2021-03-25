@@ -5,11 +5,9 @@ import com.team_project.shop.domain.product.CategoryRepository;
 import com.team_project.shop.domain.product.*;
 import com.team_project.shop.domain.product.Informations.Informations;
 import com.team_project.shop.domain.product.Informations.InformationsRepository;
-import com.team_project.shop.domain.user.Users;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
@@ -34,6 +32,9 @@ public class ProductService {
     }
 
     @Transactional
+    public Category findCategory(Long categoryId){ return categoryRepository.findById(categoryId).get(); }
+
+    @Transactional
     public void saveProduct(Products product){
         productsRepository.save(product);
     }
@@ -46,6 +47,17 @@ public class ProductService {
     @Transactional
     public void saveInformation(Informations inform) { informationsRepository.save(inform); }
 
+    @Transactional
+    public Products findById(Long id){ return productsRepository.findById(id).get(); }
+
+    @Transactional
+    public List<Products> findAllByUserId(Long userId) { return productsRepository.findAllByUserId(userId);}
+
+    @Transactional
+    public List<Product_Options> findAllByProductId(Long productId) { return optionsRepository.findAllByProductId(productId);}
+
+    @Transactional
+    public Product_Options findByProductId(Long productId) { return optionsRepository.findAllByProductId(productId).get(0); }
     //Controller에서 처리할 예정.
 //    @Transactional
 //    public Long update(Long productId, MultipartHttpServletRequest request){
@@ -98,7 +110,7 @@ public class ProductService {
 
 
     public Images saveImage(MultipartFile file, String fileName,Products product){
-        String path = System.getProperty("user.dir") + "\\bin\\main\\static\\images\\" + product.getId().toString();
+        String path = System.getProperty("user.dir") + "\\build\\resources\\main\\static\\images\\" + product.getId().toString();
         File folder = new File(path);
         if(!folder.exists()){
             folder.mkdirs();
@@ -113,13 +125,16 @@ public class ProductService {
         return image;
     }
 
-    private Images updateImage(Images image, MultipartFile file, String fileName,Products product){
-        String path = System.getProperty("user.dir")
-                + "\\bin\\main\\static\\images\\"
-                + product.getId().toString();
-        deleteImage(System.getProperty("user.dir")+"/bin/main/static"+ image.getImageURL(),image);
-        writeImage(file,path,fileName);
-        image.update(fileName,"/images/"+product.getId().toString()+"/" +fileName);
+    public Images updateImage(Images image, MultipartFile file, String fileName,Products product){
+        if(file!=null){
+            String path = System.getProperty("user.dir")
+                    + "\\build\\resources\\main\\static\\images\\"
+                    + product.getId().toString();
+            deleteImage(System.getProperty("user.dir")+"/build/resources/main/static"+ image.getImageURL(),image);
+            writeImage(file,path,fileName);
+            image.update(fileName,"/images/"+product.getId().toString()+"/" +fileName);
+
+        }
         return image;
     }
 
