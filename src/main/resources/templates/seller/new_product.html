@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+    <h2>상품 등록</h2>
+    <h3>상품 기본 정보</h3>
+    <div>
+        등록 상품명
+        <input type="text" name="productName">
+    </div>
+    <div>
+        카테고리
+        <div id="categories">잡화>가방</div>
+    </div>
+
+    <div>
+        <h3>구매옵션</h3>
+        <input type="button" class="btn-newRow" value="옵션 추가"/>
+        <table border="1" id="options">
+            <tr align="center">
+                <td rowspan="2" valign="bottom"><input type="checkbox" id="check-all"></td>
+                <td>구매옵션정보</td>
+                <td rowspan="2">판매상태</td>
+                <td rowspan="2">판매가격</td>
+                <td rowspan="2">재고 수량</td>
+                <td rowspan="2">대표 이미지</td>
+                <td rowspan="2">상세 설명</td>
+                <td rowspan="2">고시정보</td>
+            </tr>
+            <tr align="center">
+                <td>색상</td>
+            </tr>
+            <tr class="1" align="center">
+                <td><input type="checkbox" name="check"></td>
+                <td ><input type="text" name="optionName"></td>
+                <td class="state-new">새 상품</td>
+                <td ><input type="text" name="price" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" /></td>
+                <td ><input type="text" name="stock" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" /></td>
+                <td ><input type="file" name="mainImage" accept="image/jpeg, image/png" value="등록"></td>
+                <td ><input type="file" name="detailImage" accept="image/jpeg, image/png" value="등록"></td>
+                <td><input type="button" class="btn-information" value="등록" onclick="openInformation(this)"></td>
+            </tr>
+        </table>
+    </div>
+    <button id="btn-save" type="button">등록하기</button>
+    <div class="hover-information 1"> {{>seller/information}} </div>
+
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="/js/seller.js"></script>
+    <script>
+        let rows = 1;
+        $('.btn-newRow').click(function(){
+            addRow(++rows);
+        });
+    </script>
+
+</body>
+
+<!--- 이미지는 등록버튼을 누르면 팝업으로 이미지를 등록할 수 있도록 되어있음   --->
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/product.css">
+</head>
+<body>
+    <h2>상품조회/수정</h2>
+    <button type="button" onclick="location.href='/api/product/seller'">상품개별등록</button>
+
+    <div>
+        <h3>구매옵션</h3>
+        <input type="button" value="판매중지" onclick="stopProduct()" />
+        <table border="1" id="options">
+            <tr align="center">
+                <td valign="bottom"><input type="checkbox" id="check-all"></td>
+                <td>상품ID</td>
+                <td>카테고리</td>
+                <td>상품명</td>
+                <td>판매일정</td>
+                <td>등록일</td>
+                <td>메뉴</td>
+            </tr>
+            {{#products}}
+            <tr align="center">
+                <td><input type="checkbox" name="check"></td>
+                <td>{{productID}}</td>
+                <td>
+                    {{#categories.0}} {{.}} {{/categories.0}}
+                </td>
+                <td>{{productName}}</td>
+                <td>2021-03-21 ~ 2099-01-01</td>
+                <td>{{created}}</td>
+                <td><button type="button" onclick="location.href='/api/product/seller/{{productID}}'">수정하기</button> </td>
+            </tr>
+            {{/products}}
+        </table>
+    </div>
+    {{>seller/seller_footer}}
+</body>
+</html>

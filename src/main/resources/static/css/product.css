@@ -1,0 +1,50 @@
+.hover-information{
+    background:rgba(0,0,0,.4);
+    cursor:pointer;
+    display:none;
+    height:100%;
+    position:fixed;
+    text-align:center;
+    top:0;
+    width:100%;
+    z-index:10000;
+    left:0;
+}
+.hover-information .helper{
+    display:inline-block;
+    height:100%;
+    vertical-align:middle;
+}
+.hover-information > div{
+    background-color: #fff;
+    box-shadow: 10px 10px 60px #555;
+    display: inline-block;
+    height: auto;
+    max-width: 551px;
+    min-height: 100px;
+    vertical-align: middle;
+    position: relative;
+    border-radius: 8px;
+    padding: 15px 2% 50px 2%;
+}
+td > textarea{
+    min-width: 320px;
+    min-height: 65px;
+}
+.state, .state-new{
+    color:steelblue;
+}
+#product-id{
+    display: none;
+}
+.product-wrap{
+    border-bottom: 0;
+    display: block;
+    overflow: hidden;
+    position: relative;
+    float: left;
+    list-style: none;
+}
+.product-wrap > img{
+    width: 100%;
+}
