@@ -25,10 +25,8 @@ var post = {
     },
     save : function(){
         var formData = new FormData();
-        formData.append("productName",$('[name=productName]').val());
-
-
         makeProductVO(formData);
+
         $.ajax({
             type : 'POST',
             url : "/api/product/bag",
@@ -42,10 +40,11 @@ var post = {
         }).fail(function(error){
             alert("등록실패");
         });
+
     },
     update : function(){
         var formData = new FormData();
-        formData.append("productName",$('[name=productName]').val());
+        // formData.append("productName",$('[name=productName]').val());
         //판매상태 처리, 상품 ID 받기 추가해야함
         let id = $("#product-id").val();
 
@@ -60,6 +59,7 @@ var post = {
         }).done(function(){
             alert("등록완료");
             window.location.href = '/api/product/seller/user';
+            window.location.method = 'GET';
         }).fail(function(error){
             alert("등록실패");
         });
@@ -68,6 +68,7 @@ var post = {
 post.init();
 
 function makeProductVO(formData){
+    formData.append("productName",$('[name=productName]').val());
     $('[name="optionName"]').each(function(){
         formData.append("optionName",$(this).val());
     });
@@ -120,6 +121,23 @@ function makeProductVO(formData){
         formData.append("afterServiceAddress",$(this).val());
     });
 }
+function makeBagDto(formData){
+    formData.append("productName",$('[name=productName]').val());
+    $('.default').each(function(){
+        var name = $(this).attr("name");
+        $("[name="+name+"]").each(function(){
+            if($(this).attr('type') !== "file"){
+                formData.append(name,$(this).val());
+            }else if($(this).prop('files').length > 0){
+                formData.append(name, $(this).prop('files')[0]);
+                formData.append(name+"Key", $(this).closest('tr').attr('class'));
+            }
+        });
+    });
+    $('.state').each(function(){
+        formData.append('state',$(this).text());
+    });
+}
 function addRow(rows){
     let newRow ="<tr class="+rows+" align='center'>"+
         "<td><input type=\"checkbox\" name=\"check\"></td>" +
@@ -153,7 +171,6 @@ function addRow(rows){
 
 function openInformation(e){
     let className = $(e).closest('tr').attr('class');
-    console.log($('.'+className));
     $('.hover-information').each(function (){
         if($(this).hasClass(className)) $(this).show();
         else $(this).hide();

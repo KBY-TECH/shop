@@ -66,7 +66,7 @@ public class ProductController {
         model.addAttribute("categories",categories);
         model.addAttribute("options",dto);
         model.addAttribute("optionSize",options.size());
-        return "seller/update_product";
+        return "seller/update_product_bag";
     }
 
     @GetMapping("/categories/{categoryId}")
