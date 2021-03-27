@@ -7,16 +7,15 @@ import com.team_project.shop.domain.product.*;
 import com.team_project.shop.domain.product.Informations.*;
 import com.team_project.shop.domain.user.Users;
 import com.team_project.shop.domain.user.UsersRepository;
+import com.team_project.shop.network.request.productRequestDto;
 import com.team_project.shop.network.response.ProductsResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -30,7 +29,7 @@ public class ProductController {
     public String getRegistrationForm(@LoginUser SessionUser user){
         if(user == null) return "index";
 
-        return "seller/new_product";
+        return "seller/new_product_bag";
     }
     @GetMapping("/seller/user")
     public String getSellerProductList(@LoginUser SessionUser user, Model model){
@@ -108,584 +107,460 @@ public class ProductController {
         //상품 카테고리마다 html만 다른 값으로 리턴할 예정
         return "item/bag";
     }
-//    //TODO : Post, Put 매핑에 대해 enum function으로 간소화해보기
-//    @PostMapping("/meat")
-//    public String createMeat(@RequestBody productSaveRequestDto.MeatsDto dto, @LoginUser Users user){
-//        Category category = productService.findCategory("Meat");
-//        Products product = dto.getProductDto().toProductEntity(user, category);
-//        productService.saveProduct(product);
-//        for(int i=0; i<dto.getProductDto().Length(); i++){
-//            Informations inform = dto.toInformationEntity(i);
-//            productService.saveInformation(inform);
-//            Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//            productService.saveOption(option);
-//        }
-//        return "";
-//    }
-//
-//    @PutMapping("/meat/{productId}")
-//    public String updateMeat(@PathVariable Long productId, @RequestBody productUpdateRequestDto.MeatsDto dto){
-//        Category category = productService.findCategory("Meat");
-//        Products product = productService.findById(productId);
-//        product.update(dto.getProductDto().getProductName());
-//        List<Product_Options> options = productService.findAllByProductId(productId);
-//        //수정가능한 목록: 상품명, 상품 옵션, 검색어, 대표이미지, 상품 기본 정보, 판매상태
-//        for (int i=0; i<=dto.getProductDto().Length();i++){
-//            if( i >= options.size()){
-//                Informations inform = dto.toInformationEntity(i);
-//                productService.saveInformation(inform);
-//                Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//                productService.saveOption(option);
-//            }
-//            Product_Options option = options.get(i);
-//            option.update(dto.getProductDto().getOptionName()[i],
-//                    productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImage().get(i), i+"_main.jpg",product),
-//                    productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImage().get(i), i+"_detail.jpg",product),
-//                    Long.parseLong(dto.getProductDto().getPrice()[i]),
-//                    Long.parseLong(dto.getProductDto().getStock()[i]),
-//                    dto.getProductDto().getStock()[i]);
-//            Meats inform = (Meats)option.getInformation();
-//            inform.update(dto.getMeatPart()[i],dto.getFoodsDto().getProducer()[i],
-//                    dto.getOrigin()[i],dto.getFoodsDto().getQualityMaintenanceDate()[i],
-//                    dto.getIndication()[i],dto.getFoodsDto().getImportedFood()[i],
-//                    dto.getComposition()[i],dto.getStorageMethod()[i], dto.getFoodsDto().getPrecaution()[i],
-//                    dto.getFoodsDto().getConsumerCounselingPhoneNum()[i]);
-//        }
-//
-//        return "";
-//    }
-//
-//    @PostMapping("/frozenfood")
-//    public String createFrozenFood(@RequestBody productSaveRequestDto.FrozenFoodsDto dto, @LoginUser Users user){
-//        Category category = productService.findCategory("FrozenFood");
-//        Products product = dto.getProductDto().toProductEntity(user, category);
-//        productService.saveProduct(product);
-//        for(int i=0;i<dto.getProductDto().Length(); i++){
-//            Informations inform = dto.toInformationEntity(i);
-//            productService.saveInformation(inform);
-//            Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//            productService.saveOption(option);
-//        }
-//        return "";
-//    }
-//
-//    @PutMapping("/frozenfood/{productId}")
-//    public String updateFrozenFood(@PathVariable Long productId, @RequestBody productUpdateRequestDto.FrozenFoodsDto dto){
-//        Category category = productService.findCategory("FrozenFood");
-//        Products product = productService.findById(productId);
-//        product.update(dto.getProductDto().getProductName());
-//        List<Product_Options> options = productService.findAllByProductId(productId);
-//        //수정가능한 목록: 상품명, 상품 옵션, 검색어, 대표이미지, 상품 기본 정보, 판매상태
-//        for (int i=0; i<=dto.getProductDto().Length();i++){
-//            if( i >= options.size()){
-//                Informations inform = dto.toInformationEntity(i);
-//                productService.saveInformation(inform);
-//                Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//                productService.saveOption(option);
-//            }
-//            Product_Options option = options.get(i);
-//            option.update(dto.getProductDto().getOptionName()[i],
-//                    productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImage().get(i), i+"_main.jpg",product),
-//                    productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImage().get(i), i+"_detail.jpg",product),
-//                    Long.parseLong(dto.getProductDto().getPrice()[i]),
-//                    Long.parseLong(dto.getProductDto().getStock()[i]),
-//                    dto.getProductDto().getStock()[i]);
-//            FrozenFoods inform = (FrozenFoods)option.getInformation();
-//            inform.update(dto.getFoodType()[i],dto.getFoodsDto().getProducer()[i],
-//                    dto.getFoodsDto().getQualityMaintenanceDate()[i],
-//                    dto.getCapacityByPackingUnit()[i],dto.getMaterialContent()[i],
-//                    dto.getNutritionalIngredients()[i],dto.getGeneticallyModified()[i],
-//                    dto.getFoodsDto().getPrecaution()[i],dto.getFoodsDto().getImportedFood()[i],
-//                    dto.getFoodsDto().getConsumerCounselingPhoneNum()[i]);
-//        }
-//
-//        return "";
-//    }
-//
-//    @PostMapping("/outer")
-//    public String createOuter(@RequestBody productSaveRequestDto.OuterDto dto, @LoginUser Users user){
-//        Category category = productService.findCategory("Outer");
-//        Products product = dto.getProductDto().toProductEntity(user, category);
-//        productService.saveProduct(product);
-//        for(int i=0; i<dto.getProductDto().Length(); i++){
-//            Informations inform = dto.toInformationEntity(i);
-//            productService.saveInformation(inform);
-//            Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//            productService.saveOption(option);
-//        }
-//        return "";
-//    }
-//
-//    @PutMapping("/outer/{productId}")
-//    public String updateOuter(@PathVariable Long productId, @RequestBody productUpdateRequestDto.OuterDto dto){
-//        Category category = productService.findCategory("Outer");
-//        Products product = productService.findById(productId);
-//        product.update(dto.getProductDto().getProductName());
-//        List<Product_Options> options = productService.findAllByProductId(productId);
-//        //수정가능한 목록: 상품명, 상품 옵션, 검색어, 대표이미지, 상품 기본 정보, 판매상태
-//        for (int i=0; i<=dto.getProductDto().Length();i++){
-//            if( i >= options.size()){
-//                Informations inform = dto.toInformationEntity(i);
-//                productService.saveInformation(inform);
-//                Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//                productService.saveOption(option);
-//            }
-//            Product_Options option = options.get(i);
-//            option.update(dto.getProductDto().getOptionName()[i],
-//                    productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImage().get(i), i+"_main.jpg",product),
-//                    productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImage().get(i), i+"_detail.jpg",product),
-//                    Long.parseLong(dto.getProductDto().getPrice()[i]),
-//                    Long.parseLong(dto.getProductDto().getStock()[i]),
-//                    dto.getProductDto().getStock()[i]);
-//            Outer inform = (Outer)option.getInformation();
-//            inform.update(dto.getClothesDto().getMaterial()[i],dto.getClothesDto().getColor()[i],
-//                    dto.getClothesDto().getSize()[i],dto.getClothesDto().getProducer()[i],
-//                    dto.getClothesDto().getMadeIn()[i],dto.getClothesDto().getPrecautions()[i],
-//                    dto.getClothesDto().getManufacturedDate()[i],dto.getClothesDto().getQualityAssuranceStandard()[i],
-//                    dto.getClothesDto().getAfterServiceAddress()[i]);
-//        }
-//
-//        return "";
-//    }
-//
-//    @PostMapping("/pants")
-//    public String createPants(@RequestBody productSaveRequestDto.PantsDto dto, @LoginUser Users user){
-//        Category category = productService.findCategory("Pants");
-//        Products product = dto.getProductDto().toProductEntity(user, category);
-//        productService.saveProduct(product);
-//        for(int i=0; i<dto.getProductDto().Length(); i++){
-//            Informations inform = dto.toInformationEntity(i);
-//            productService.saveInformation(inform);
-//            Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//            productService.saveOption(option);
-//        }
-//        return "";
-//    }
-//
-//    @PutMapping("/pants/{productId}")
-//    public String updatePants(@PathVariable Long productId, @RequestBody productUpdateRequestDto.PantsDto dto){
-//        Category category = productService.findCategory("Pants");
-//        Products product = productService.findById(productId);
-//        product.update(dto.getProductDto().getProductName());
-//        List<Product_Options> options = productService.findAllByProductId(productId);
-//        //수정가능한 목록: 상품명, 상품 옵션, 검색어, 대표이미지, 상품 기본 정보, 판매상태
-//        for (int i=0; i<=dto.getProductDto().Length();i++){
-//            if( i >= options.size()){
-//                Informations inform = dto.toInformationEntity(i);
-//                productService.saveInformation(inform);
-//                Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//                productService.saveOption(option);
-//            }
-//            Product_Options option = options.get(i);
-//            option.update(dto.getProductDto().getOptionName()[i],
-//                    productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImage().get(i), i+"_main.jpg",product),
-//                    productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImage().get(i), i+"_detail.jpg",product),
-//                    Long.parseLong(dto.getProductDto().getPrice()[i]),
-//                    Long.parseLong(dto.getProductDto().getStock()[i]),
-//                    dto.getProductDto().getStock()[i]);
-//            Pants inform = (Pants) option.getInformation();
-//            inform.update(dto.getClothesDto().getMaterial()[i],dto.getClothesDto().getColor()[i],
-//                    dto.getClothesDto().getSize()[i],dto.getClothesDto().getProducer()[i],
-//                    dto.getClothesDto().getMadeIn()[i],dto.getClothesDto().getPrecautions()[i],
-//                    dto.getClothesDto().getManufacturedDate()[i],dto.getClothesDto().getQualityAssuranceStandard()[i],
-//                    dto.getClothesDto().getAfterServiceAddress()[i]);
-//        }
-//
-//        return "";
-//    }
-//
-//    @PostMapping("/seafoods")
-//    public String createSeaFoods(@RequestBody productSaveRequestDto.SeaFoodsDto dto, @LoginUser Users user){
-//        Category category = productService.findCategory("Seafoods");
-//        Products product = dto.getProductDto().toProductEntity(user, category);
-//        productService.saveProduct(product);
-//        for(int i=0; i<dto.getProductDto().Length(); i++){
-//            Informations inform = dto.toInformationEntity(i);
-//            productService.saveInformation(inform);
-//            Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//            productService.saveOption(option);
-//        }
-//        return "";
-//    }
-//
-//    @PutMapping("/seafoods/{productId}")
-//    public String updateSeaFoods(@PathVariable Long productId, @RequestBody productUpdateRequestDto.SeaFoodsDto dto){
-//        Category category = productService.findCategory("SeaFoods");
-//        Products product = productService.findById(productId);
-//        product.update(dto.getProductDto().getProductName());
-//        List<Product_Options> options = productService.findAllByProductId(productId);
-//        //수정가능한 목록: 상품명, 상품 옵션, 검색어, 대표이미지, 상품 기본 정보, 판매상태
-//        for (int i=0; i<=dto.getProductDto().Length();i++){
-//            if( i >= options.size()){
-//                Informations inform = dto.toInformationEntity(i);
-//                productService.saveInformation(inform);
-//                Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//                productService.saveOption(option);
-//            }
-//            Product_Options option = options.get(i);
-//            option.update(dto.getProductDto().getOptionName()[i],
-//                    productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImage().get(i), i+"_main.jpg",product),
-//                    productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImage().get(i), i+"_detail.jpg",product),
-//                    Long.parseLong(dto.getProductDto().getPrice()[i]),
-//                    Long.parseLong(dto.getProductDto().getStock()[i]),
-//                    dto.getProductDto().getStock()[i]);
-//            SeaFoods inform = (SeaFoods) option.getInformation();
-//            inform.update(dto.getFoodsDto().getProducer()[i], dto.getFoodsDto().getQualityMaintenanceDate()[i],
-//                    dto.getFoodsDto().getImportedFood()[i],dto.getFoodsDto().getPrecaution()[i],
-//                    dto.getFoodsDto().getConsumerCounselingPhoneNum()[i],dto.getFoodName()[i],
-//                    dto.getFoodType()[i], dto.getCapacityByPackingUnit()[i],dto.getMaterialContent()[i],
-//                    dto.getNutritionalIngredients()[i],dto.getGeneticallyModified()[i]);
-//        }
-//
-//        return "";
-//    }
-//
-//    @PostMapping("/sportswear")
-//    public String createSportswear(@RequestBody productSaveRequestDto.SportswearDto dto, @LoginUser Users user){
-//        Category category = productService.findCategory("Sportswear");
-//        Products product = dto.getProductDto().toProductEntity(user, category);
-//        productService.saveProduct(product);
-//        for(int i=0; i<dto.getProductDto().Length(); i++){
-//            Informations inform = dto.toInformationEntity(i);
-//            productService.saveInformation(inform);
-//            Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//            productService.saveOption(option);
-//        }
-//        return "";
-//    }
-//
-//    @PutMapping("/sportswear/{productId}")
-//    public String updateSportswear(@PathVariable Long productId, @RequestBody productUpdateRequestDto.SportswearDto dto){
-//        Category category = productService.findCategory("Sportswear");
-//        Products product = productService.findById(productId);
-//        product.update(dto.getProductDto().getProductName());
-//        List<Product_Options> options = productService.findAllByProductId(productId);
-//        //수정가능한 목록: 상품명, 상품 옵션, 검색어, 대표이미지, 상품 기본 정보, 판매상태
-//        for (int i=0; i<=dto.getProductDto().Length();i++){
-//            if( i >= options.size()){
-//                Informations inform = dto.toInformationEntity(i);
-//                productService.saveInformation(inform);
-//                Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//                productService.saveOption(option);
-//            }
-//            Product_Options option = options.get(i);
-//            option.update(dto.getProductDto().getOptionName()[i],
-//                    productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImage().get(i), i+"_main.jpg",product),
-//                    productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImage().get(i), i+"_detail.jpg",product),
-//                    Long.parseLong(dto.getProductDto().getPrice()[i]),
-//                    Long.parseLong(dto.getProductDto().getStock()[i]),
-//                    dto.getProductDto().getStock()[i]);
-//            Sportswear inform = (Sportswear) option.getInformation();
-//            inform.update(dto.getClothesDto().getMaterial()[i],dto.getClothesDto().getColor()[i],
-//                    dto.getClothesDto().getSize()[i],dto.getClothesDto().getProducer()[i],
-//                    dto.getClothesDto().getMadeIn()[i],dto.getClothesDto().getPrecautions()[i],
-//                    dto.getClothesDto().getManufacturedDate()[i],dto.getClothesDto().getQualityAssuranceStandard()[i],
-//                    dto.getClothesDto().getAfterServiceAddress()[i]);
-//        }
-//
-//        return "";
-//    }
-//
-//    @PostMapping("/top")
-//    public String createTop(@RequestBody productSaveRequestDto.TopDto dto, @LoginUser Users user){
-//        Category category = productService.findCategory("Outer");
-//        Products product = dto.getProductDto().toProductEntity(user, category);
-//        productService.saveProduct(product);
-//        for(int i=0; i<dto.getProductDto().Length(); i++){
-//            Informations inform = dto.toInformationEntity(i);
-//            productService.saveInformation(inform);
-//            Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//            productService.saveOption(option);
-//        }
-//        return "";
-//    }
-//
-//    @PutMapping("/top/{productId}")
-//    public String updateTop(@PathVariable Long productId, @RequestBody productUpdateRequestDto.TopDto dto){
-//        Category category = productService.findCategory("Top");
-//        Products product = productService.findById(productId);
-//        product.update(dto.getProductDto().getProductName());
-//        List<Product_Options> options = productService.findAllByProductId(productId);
-//        //수정가능한 목록: 상품명, 상품 옵션, 검색어, 대표이미지, 상품 기본 정보, 판매상태
-//        for (int i=0; i<=dto.getProductDto().Length();i++){
-//            if( i >= options.size()){
-//                Informations inform = dto.toInformationEntity(i);
-//                productService.saveInformation(inform);
-//                Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//                productService.saveOption(option);
-//            }
-//            Product_Options option = options.get(i);
-//            option.update(dto.getProductDto().getOptionName()[i],
-//                    productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImage().get(i), i+"_main.jpg",product),
-//                    productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImage().get(i), i+"_detail.jpg",product),
-//                    Long.parseLong(dto.getProductDto().getPrice()[i]),
-//                    Long.parseLong(dto.getProductDto().getStock()[i]),
-//                    dto.getProductDto().getStock()[i]);
-//            Top inform = (Top) option.getInformation();
-//            inform.update(dto.getClothesDto().getMaterial()[i],dto.getClothesDto().getColor()[i],
-//                    dto.getClothesDto().getSize()[i],dto.getClothesDto().getProducer()[i],
-//                    dto.getClothesDto().getMadeIn()[i],dto.getClothesDto().getPrecautions()[i],
-//                    dto.getClothesDto().getManufacturedDate()[i],dto.getClothesDto().getQualityAssuranceStandard()[i],
-//                    dto.getClothesDto().getAfterServiceAddress()[i]);
-//        }
-//
-//        return "";
-//    }
-//
-//    @PostMapping("/underwear")
-//    public String createUnderWear(@RequestBody productSaveRequestDto.UnderWearDto dto, @LoginUser Users user){
-//        Category category = productService.findCategory("UnderWear");
-//        Products product = dto.getProductDto().toProductEntity(user, category);
-//        productService.saveProduct(product);
-//        for(int i=0; i<dto.getProductDto().Length(); i++){
-//            Informations inform = dto.toInformationEntity(i);
-//            productService.saveInformation(inform);
-//            Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//            productService.saveOption(option);
-//        }
-//        return "";
-//    }
-//
-//    @PutMapping("/underwear/{productId}")
-//    public String updateUnderwear(@PathVariable Long productId, @RequestBody productUpdateRequestDto.UnderWearDto dto){
-//        Category category = productService.findCategory("UnderWear");
-//        Products product = productService.findById(productId);
-//        product.update(dto.getProductDto().getProductName());
-//        List<Product_Options> options = productService.findAllByProductId(productId);
-//        //수정가능한 목록: 상품명, 상품 옵션, 검색어, 대표이미지, 상품 기본 정보, 판매상태
-//        for (int i=0; i<=dto.getProductDto().Length();i++){
-//            if( i >= options.size()){
-//                Informations inform = dto.toInformationEntity(i);
-//                productService.saveInformation(inform);
-//                Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//                productService.saveOption(option);
-//            }
-//            Product_Options option = options.get(i);
-//            option.update(dto.getProductDto().getOptionName()[i],
-//                    productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImage().get(i), i+"_main.jpg",product),
-//                    productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImage().get(i), i+"_detail.jpg",product),
-//                    Long.parseLong(dto.getProductDto().getPrice()[i]),
-//                    Long.parseLong(dto.getProductDto().getStock()[i]),
-//                    dto.getProductDto().getStock()[i]);
-//            UnderWear inform = (UnderWear) option.getInformation();
-//            inform.update(dto.getClothesDto().getMaterial()[i],dto.getClothesDto().getColor()[i],
-//                    dto.getClothesDto().getSize()[i],dto.getClothesDto().getProducer()[i],
-//                    dto.getClothesDto().getMadeIn()[i],dto.getClothesDto().getPrecautions()[i],
-//                    dto.getClothesDto().getManufacturedDate()[i],dto.getClothesDto().getQualityAssuranceStandard()[i],
-//                    dto.getClothesDto().getAfterServiceAddress()[i]);
-//        }
-//
-//        return "";
-//    }
-//
-//    @PostMapping("/wallet")
-//    public String createWallet(@RequestBody productSaveRequestDto.WalletDto dto, @LoginUser Users user){
-//        Category category = productService.findCategory("Wallet");
-//        Products product = dto.getProductDto().toProductEntity(user, category);
-//        productService.saveProduct(product);
-//        for(int i=0; i<dto.getProductDto().Length(); i++){
-//            Informations inform = dto.toInformationEntity(i);
-//            productService.saveInformation(inform);
-//            Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//            productService.saveOption(option);
-//        }
-//        return "";
-//    }
-//
-//    @PutMapping("/wallet/{productId}")
-//    public String updateWallet(@PathVariable Long productId, @RequestBody productUpdateRequestDto.WalletDto dto){
-//        Category category = productService.findCategory("Wallet");
-//        Products product = productService.findById(productId);
-//        product.update(dto.getProductDto().getProductName());
-//        List<Product_Options> options = productService.findAllByProductId(productId);
-//        //수정가능한 목록: 상품명, 상품 옵션, 검색어, 대표이미지, 상품 기본 정보, 판매상태
-//        for (int i=0; i<=dto.getProductDto().Length();i++){
-//            if( i >= options.size()){
-//                Informations inform = dto.toInformationEntity(i);
-//                productService.saveInformation(inform);
-//                Images mainImage = productService.saveImage(dto.getProductDto().getMainImage().get(i),i+"_main.jpg",product);
-//                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImage().get(i),i+"_detail.jpg",product);
-//                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
-//                productService.saveOption(option);
-//            }
-//            Product_Options option = options.get(i);
-//            option.update(dto.getProductDto().getOptionName()[i],
-//                    productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImage().get(i), i+"_main.jpg",product),
-//                    productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImage().get(i), i+"_detail.jpg",product),
-//                    Long.parseLong(dto.getProductDto().getPrice()[i]),
-//                    Long.parseLong(dto.getProductDto().getStock()[i]),
-//                    dto.getProductDto().getStock()[i]);
-//            Wallet inform = (Wallet) option.getInformation();
-//            inform.update(dto.getAccessoriesDto().getKind()[i], dto.getAccessoriesDto().getMaterial()[i],
-//                    dto.getAccessoriesDto().getSize()[i],dto.getAccessoriesDto().getProducer()[i],
-//                    dto.getAccessoriesDto().getMadeIn()[i],dto.getAccessoriesDto().getPrecautions()[i],
-//                    dto.getAccessoriesDto().getQualityAssuranceStandard()[i], dto.getAccessoriesDto().getAfterServiceAddress()[i]);
-//        }
-//
-//        return "";
-//    }
+
+    @PostMapping("/meat")
+    public String createMeat(MultipartHttpServletRequest request, @LoginUser Users user){
+        Category category = productService.findCategory("Meat");
+        productRequestDto.MeatsDto dto = productRequestDto.MeatsDto.builder().request(request).build();
+        Products product = dto.getProductDto().toProductEntity(user, category);
+        productService.saveProduct(product);
+        for(int i=0; i<dto.getProductDto().Length(); i++){
+            Informations inform = dto.toInformationEntity(i);
+            productService.saveInformation(inform);
+            Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
+            productService.saveOption(option);
+        }
+        return "";
+    }
+
+    @PutMapping("/meat/{productId}")
+    public String updateMeat(@PathVariable Long productId, MultipartHttpServletRequest request){
+        Products product = productService.findById(productId);
+        productRequestDto.MeatsDto dto = productRequestDto.MeatsDto.builder().request(request).build();
+        List<Product_Options> options = productService.findAllByProductId(productId);
+
+        dto.getProductDto().updateProduct(product);
+        for (int i=0; i<dto.getProductDto().Length();i++){
+            if( i >= options.size()){
+                Meats Inform = dto.toInformationEntity(i);
+                productService.saveInformation(Inform);
+                Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,Inform);
+                productService.saveOption(option);
+            }
+            else{
+                Product_Options option = options.get(i);
+                Meats inform = (Meats) option.getInformation();
+                dto.updateInformation(i,inform);
+                dto.getProductDto().updateOption(i,option,
+                        productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product),
+                        productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
+            }
+        }
+        return "";
+    }
+
+    @PostMapping("/frozenfood")
+    public String createFrozenFood(MultipartHttpServletRequest request, @LoginUser Users user){
+        Category category = productService.findCategory("FrozenFood");
+        productRequestDto.FrozenFoodsDto dto = productRequestDto.FrozenFoodsDto.builder().request(request).build();
+        Products product = dto.getProductDto().toProductEntity(user, category);
+        productService.saveProduct(product);
+        for(int i=0;i<dto.getProductDto().Length(); i++){
+            Informations inform = dto.toInformationEntity(i);
+            productService.saveInformation(inform);
+            Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
+            productService.saveOption(option);
+        }
+        return "";
+    }
+
+    @PutMapping("/frozenfood/{productId}")
+    public String updateFrozenFood(@PathVariable Long productId, MultipartHttpServletRequest request){
+        Products product = productService.findById(productId);
+        productRequestDto.FrozenFoodsDto dto = productRequestDto.FrozenFoodsDto.builder().request(request).build();
+        List<Product_Options> options = productService.findAllByProductId(productId);
+
+        dto.getProductDto().updateProduct(product);
+        for (int i=0; i<dto.getProductDto().Length();i++){
+            if( i >= options.size()){
+                FrozenFoods Inform = dto.toInformationEntity(i);
+                productService.saveInformation(Inform);
+                Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,Inform);
+                productService.saveOption(option);
+            }
+            else{
+                Product_Options option = options.get(i);
+                FrozenFoods inform = (FrozenFoods) option.getInformation();
+                dto.updateInformation(i,inform);
+                dto.getProductDto().updateOption(i,option,
+                        productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product),
+                        productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
+            }
+        }
+        return "";
+    }
+
+    @PostMapping("/outer")
+    public String createOuter(MultipartHttpServletRequest request, @LoginUser Users user){
+        Category category = productService.findCategory("Outer");
+        productRequestDto.OuterDto dto = productRequestDto.OuterDto.builder().request(request).build();
+        Products product = dto.getProductDto().toProductEntity(user, category);
+        productService.saveProduct(product);
+        for(int i=0; i<dto.getProductDto().Length(); i++){
+            Informations inform = dto.toInformationEntity(i);
+            productService.saveInformation(inform);
+            Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
+            productService.saveOption(option);
+        }
+        return "";
+    }
+
+    @PutMapping("/outer/{productId}")
+    public String updateOuter(@PathVariable Long productId, MultipartHttpServletRequest request){
+        Products product = productService.findById(productId);
+        productRequestDto.OuterDto dto = productRequestDto.OuterDto.builder().request(request).build();
+        List<Product_Options> options = productService.findAllByProductId(productId);
+
+        dto.getProductDto().updateProduct(product);
+        for (int i=0; i<dto.getProductDto().Length();i++){
+            if( i >= options.size()){
+                Outer Inform = dto.toInformationEntity(i);
+                productService.saveInformation(Inform);
+                Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,Inform);
+                productService.saveOption(option);
+            }
+            else{
+                Product_Options option = options.get(i);
+                Outer inform = (Outer)option.getInformation();
+                dto.updateInformation(i,inform);
+                dto.getProductDto().updateOption(i,option,
+                        productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product),
+                        productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
+            }
+        }
+        return "";
+    }
+
+    @PostMapping("/pants")
+    public String createPants(MultipartHttpServletRequest request, @LoginUser Users user){
+        Category category = productService.findCategory("Pants");
+        productRequestDto.PantsDto dto = productRequestDto.PantsDto.builder().request(request).build();
+        Products product = dto.getProductDto().toProductEntity(user, category);
+        productService.saveProduct(product);
+        for(int i=0; i<dto.getProductDto().Length(); i++){
+            Informations inform = dto.toInformationEntity(i);
+            productService.saveInformation(inform);
+            Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
+            productService.saveOption(option);
+        }
+        return "";
+    }
+
+    @PutMapping("/pants/{productId}")
+    public String updatePants(@PathVariable Long productId, MultipartHttpServletRequest request){
+        Products product = productService.findById(productId);
+        productRequestDto.PantsDto dto = productRequestDto.PantsDto.builder().request(request).build();
+        List<Product_Options> options = productService.findAllByProductId(productId);
+
+        dto.getProductDto().updateProduct(product);
+        for (int i=0; i<dto.getProductDto().Length();i++){
+            if( i >= options.size()){
+                Pants Inform = dto.toInformationEntity(i);
+                productService.saveInformation(Inform);
+                Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,Inform);
+                productService.saveOption(option);
+            }
+            else{
+                Product_Options option = options.get(i);
+                Pants inform = (Pants)option.getInformation();
+                dto.updateInformation(i,inform);
+                dto.getProductDto().updateOption(i,option,
+                        productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product),
+                        productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
+            }
+        }
+
+        return "";
+    }
+
+    @PostMapping("/seafoods")
+    public String createSeaFoods(@RequestBody productRequestDto.SeaFoodsDto dto, @LoginUser Users user){
+        Category category = productService.findCategory("Seafoods");
+        Products product = dto.getProductDto().toProductEntity(user, category);
+        productService.saveProduct(product);
+        for(int i=0; i<dto.getProductDto().Length(); i++){
+            Informations inform = dto.toInformationEntity(i);
+            productService.saveInformation(inform);
+            Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
+            productService.saveOption(option);
+        }
+        return "";
+    }
+
+    @PutMapping("/seafoods/{productId}")
+    public String updateSeaFoods(@PathVariable Long productId, MultipartHttpServletRequest request){
+        Products product = productService.findById(productId);
+        productRequestDto.SeaFoodsDto dto = productRequestDto.SeaFoodsDto.builder().request(request).build();
+        List<Product_Options> options = productService.findAllByProductId(productId);
+
+        dto.getProductDto().updateProduct(product);
+        for (int i=0; i<dto.getProductDto().Length();i++){
+            if( i >= options.size()){
+                SeaFoods Inform = dto.toInformationEntity(i);
+                productService.saveInformation(Inform);
+                Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,Inform);
+                productService.saveOption(option);
+            }
+            else{
+                Product_Options option = options.get(i);
+                SeaFoods inform = (SeaFoods) option.getInformation();
+                dto.updateInformation(i,inform);
+                dto.getProductDto().updateOption(i,option,
+                        productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product),
+                        productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
+            }
+        }
+
+        return "";
+    }
+
+    @PostMapping("/sportswear")
+    public String createSportswear(MultipartHttpServletRequest request, @LoginUser Users user){
+        Category category = productService.findCategory("Sportswear");
+        productRequestDto.SportswearDto dto = productRequestDto.SportswearDto.builder().request(request).build();
+        Products product = dto.getProductDto().toProductEntity(user, category);
+        productService.saveProduct(product);
+        for(int i=0; i<dto.getProductDto().Length(); i++){
+            Informations inform = dto.toInformationEntity(i);
+            productService.saveInformation(inform);
+            Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
+            productService.saveOption(option);
+        }
+        return "";
+    }
+
+    @PutMapping("/sportswear/{productId}")
+    public String updateSportswear(@PathVariable Long productId, MultipartHttpServletRequest request){
+        Products product = productService.findById(productId);
+        productRequestDto.SportswearDto dto = productRequestDto.SportswearDto.builder().request(request).build();
+        List<Product_Options> options = productService.findAllByProductId(productId);
+
+        dto.getProductDto().updateProduct(product);
+        for (int i=0; i<dto.getProductDto().Length();i++){
+            if( i >= options.size()){
+                Sportswear Inform = dto.toInformationEntity(i);
+                productService.saveInformation(Inform);
+                Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,Inform);
+                productService.saveOption(option);
+            }
+            else{
+                Product_Options option = options.get(i);
+                Sportswear inform = (Sportswear)option.getInformation();
+                dto.updateInformation(i,inform);
+                dto.getProductDto().updateOption(i,option,
+                        productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product),
+                        productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
+            }
+        }
+
+        return "";
+    }
+
+    @PostMapping("/top")
+    public String createTop(MultipartHttpServletRequest request, @LoginUser Users user){
+        Category category = productService.findCategory("Outer");
+        productRequestDto.TopDto dto = productRequestDto.TopDto.builder().request(request).build();
+        Products product = dto.getProductDto().toProductEntity(user, category);
+        productService.saveProduct(product);
+        for(int i=0; i<dto.getProductDto().Length(); i++){
+            Informations inform = dto.toInformationEntity(i);
+            productService.saveInformation(inform);
+            Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
+            productService.saveOption(option);
+        }
+        return "";
+    }
+
+    @PutMapping("/top/{productId}")
+    public String updateTop(@PathVariable Long productId, MultipartHttpServletRequest request){
+        Products product = productService.findById(productId);
+        productRequestDto.TopDto dto = productRequestDto.TopDto.builder().request(request).build();
+        List<Product_Options> options = productService.findAllByProductId(productId);
+
+        dto.getProductDto().updateProduct(product);
+        for (int i=0; i<dto.getProductDto().Length();i++){
+            if( i >= options.size()){
+                Top Inform = dto.toInformationEntity(i);
+                productService.saveInformation(Inform);
+                Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,Inform);
+                productService.saveOption(option);
+            }
+            else{
+                Product_Options option = options.get(i);
+                Top inform = (Top)option.getInformation();
+                dto.updateInformation(i,inform);
+                dto.getProductDto().updateOption(i,option,
+                        productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product),
+                        productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
+            }
+        }
+
+        return "";
+    }
+
+    @PostMapping("/underwear")
+    public String createUnderWear(MultipartHttpServletRequest request, @LoginUser Users user){
+        Category category = productService.findCategory("UnderWear");
+        productRequestDto.UnderWearDto dto = productRequestDto.UnderWearDto.builder().request(request).build();
+        Products product = dto.getProductDto().toProductEntity(user, category);
+        productService.saveProduct(product);
+        for(int i=0; i<dto.getProductDto().Length(); i++){
+            Informations inform = dto.toInformationEntity(i);
+            productService.saveInformation(inform);
+            Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
+            productService.saveOption(option);
+        }
+        return "";
+    }
+
+    @PutMapping("/underwear/{productId}")
+    public String updateUnderwear(@PathVariable Long productId, MultipartHttpServletRequest request){
+        Products product = productService.findById(productId);
+        productRequestDto.UnderWearDto dto = productRequestDto.UnderWearDto.builder().request(request).build();
+        List<Product_Options> options = productService.findAllByProductId(productId);
+
+        dto.getProductDto().updateProduct(product);
+        for (int i=0; i<dto.getProductDto().Length();i++){
+            if( i >= options.size()){
+                UnderWear Inform = dto.toInformationEntity(i);
+                productService.saveInformation(Inform);
+                Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,Inform);
+                productService.saveOption(option);
+            }
+            else{
+                Product_Options option = options.get(i);
+                UnderWear inform = (UnderWear) option.getInformation();
+                dto.updateInformation(i,inform);
+                dto.getProductDto().updateOption(i,option,
+                        productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product),
+                        productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
+            }
+        }
+
+        return "";
+    }
+
+    @PostMapping("/wallet")
+    public String createWallet(MultipartHttpServletRequest request, @LoginUser Users user){
+        Category category = productService.findCategory("Wallet");
+        productRequestDto.WalletDto dto = productRequestDto.WalletDto.builder().request(request).build();
+        Products product = dto.getProductDto().toProductEntity(user, category);
+        productService.saveProduct(product);
+        for(int i=0; i<dto.getProductDto().Length(); i++){
+            Informations inform = dto.toInformationEntity(i);
+            productService.saveInformation(inform);
+            Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
+            productService.saveOption(option);
+        }
+        return "redirect:/api/product/seller/user";
+    }
+
+    @PutMapping("/wallet/{productId}")
+    public String updateWallet(@PathVariable Long productId, MultipartHttpServletRequest request){
+        Products product = productService.findById(productId);
+        productRequestDto.WalletDto dto = productRequestDto.WalletDto.builder().request(request).build();
+        List<Product_Options> options = productService.findAllByProductId(productId);
+
+        dto.getProductDto().updateProduct(product);
+        for (int i=0; i<dto.getProductDto().Length();i++){
+            if( i >= options.size()){
+                Wallet Inform = dto.toInformationEntity(i);
+                productService.saveInformation(Inform);
+                Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,Inform);
+                productService.saveOption(option);
+            }
+            else{
+                Product_Options option = options.get(i);
+                Wallet inform = (Wallet)option.getInformation();
+                dto.updateInformation(i,inform);
+                dto.getProductDto().updateOption(i,option,
+                        productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product),
+                        productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
+            }
+        }
+
+        return "";
+    }
 
     @PostMapping("/bag")
     public String createBag(MultipartHttpServletRequest request, @LoginUser SessionUser user){
         Category LeafCategory = productService.findCategory("Bag");
         Users userResult = usersRepository.findById(user.getId()).get();
-        Products product = Products.builder()
-                .name(request.getParameter("productName"))
-                .user(userResult)
-                .category(LeafCategory)
-                .build();
+        productRequestDto.BagDto dto = productRequestDto.BagDto.builder().request(request).build();
+        Products product = dto.getProductDto().toProductEntity(userResult,LeafCategory);
         productService.saveProduct(product);
 
-        String[] optionNames = request.getParameterValues("optionName");
-        String[] optionPrices = request.getParameterValues("price");
-        String[] optionStocks = request.getParameterValues("stock");
-        List<MultipartFile> mainImages = request.getFiles("mainImage");
-        List<MultipartFile> detailImages = request.getFiles("detailImage");
-
-        String[] kinds = request.getParameterValues("kind");
-        String[] materials = request.getParameterValues("material");
-        String[] colors = request.getParameterValues("color");
-        String[] sizes = request.getParameterValues("size");
-        String[] producers = request.getParameterValues("producer");
-        String[] madeIn = request.getParameterValues("madeIn");
-        String[] precautions = request.getParameterValues("precautions");
-        String[] qualityAssuranceStandards = request.getParameterValues("qualityAssuranceStandard");
-        String[] afterServiceAddresses = request.getParameterValues("afterServiceAddress");
-
-        for(int i=0; i<optionNames.length; i++){
-            Bag inform = Bag.builder()
-                    .kind(kinds[i])
-                    .material(materials[i])
-                    .color(colors[i])
-                    .size(sizes[i])
-                    .producer(producers[i])
-                    .madeIn(madeIn[i])
-                    .precautions(precautions[i])
-                    .qualityAssuranceStandard(qualityAssuranceStandards[i])
-                    .afterServiceAddress(afterServiceAddresses[i])
-                    .build();
-            productService.saveInformation(inform);
-            Product_Options option = Product_Options.builder()
-                    .optionName(optionNames[i])
-                    .product(product)
-                    .mainImage(productService.saveImage(mainImages.get(i),i+"_main.jpg",product))
-                    .detailImage(productService.saveImage(detailImages.get(i),i+"_detail.jpg",product))
-                    .price(Long.parseLong(optionPrices[i]))
-                    .stock(Long.parseLong(optionStocks[i]))
-                    .information(inform)
-                    .build();
+        for(int i=0;i<dto.getProductDto().Length(); i++){
+            Informations bagInform = dto.toInformationEntity(i);
+            productService.saveInformation(bagInform);
+            Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+            Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+            Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,bagInform);
             productService.saveOption(option);
         }
+
         return "redirect:/api/product/seller/user";
     }
 
     @PutMapping("/bag/{productId}")
     public String updateBag(@PathVariable Long productId, MultipartHttpServletRequest request, @LoginUser SessionUser user){
         Products product = productService.findById(productId);
-        product.update(request.getParameter("productName"));
-
-        //TODO : ParameterValues 중복 코드 간소화
-        String[] optionNames = request.getParameterValues("optionName");
-        String[] optionPrices = request.getParameterValues("price");
-        String[] optionStocks = request.getParameterValues("stock");
-        List<MultipartFile> mainImages = request.getFiles("mainImage");
-        String[] mainImageKeys = request.getParameterValues("mainImageKey");
-        List<MultipartFile> detailImages = request.getFiles("detailImage");
-        String[] detailImageKeys = request.getParameterValues("detailImageKey");
-        String[] optionState = request.getParameterValues("state");
-        String[] kinds = request.getParameterValues("kind");
-        String[] materials = request.getParameterValues("material");
-        String[] colors = request.getParameterValues("color");
-        String[] sizes = request.getParameterValues("size");
-        String[] producers = request.getParameterValues("producer");
-        String[] madeIn = request.getParameterValues("madeIn");
-        String[] precautions = request.getParameterValues("precautions");
-        String[] qualityAssuranceStandards = request.getParameterValues("qualityAssuranceStandard");
-        String[] afterServiceAddresses = request.getParameterValues("afterServiceAddress");
-
+        productRequestDto.BagDto dto = productRequestDto.BagDto.builder().request(request).build();
         List<Product_Options> options = productService.findAllByProductId(productId);
-        HashMap<Integer, MultipartFile> mainImageMap = new HashMap<>();
-        for(int i=0;i<mainImages.size();i++){
-            var key = Integer.parseInt(mainImageKeys[i])-1;
-            mainImageMap.put(key,mainImages.get(i));
-        }
-        HashMap<Integer,MultipartFile> detailImageMap = new HashMap<>();
-        for(int i=0;i<detailImages.size();i++){
-            var key = Integer.parseInt(detailImageKeys[i])-1;
-            detailImageMap.put(key,detailImages.get(i));
-        }
 
-
-        for (int i=0; i<optionNames.length;i++){
+        dto.getProductDto().updateProduct(product);
+        for (int i=0; i<dto.getProductDto().Length();i++){
             if( i >= options.size()){
-                Bag inform = Bag.builder()
-                        .kind(kinds[i])
-                        .material(materials[i])
-                        .color(colors[i])
-                        .size(sizes[i])
-                        .producer(producers[i])
-                        .madeIn(madeIn[i])
-                        .precautions(precautions[i])
-                        .qualityAssuranceStandard(qualityAssuranceStandards[i])
-                        .afterServiceAddress(afterServiceAddresses[i])
-                        .build();
+                Bag inform = dto.toInformationEntity(i);
                 productService.saveInformation(inform);
-                Product_Options option = Product_Options.builder()
-                        .optionName(optionNames[i])
-                        .product(product)
-                        .mainImage(productService.saveImage(mainImageMap.get(i),i+"_main.jpg",product))
-                        .detailImage(productService.saveImage(detailImageMap.get(i),i+"_detail.jpg",product))
-                        .price(Long.parseLong(optionPrices[i]))
-                        .stock(Long.parseLong(optionStocks[i]))
-                        .information(inform)
-                        .build();
+                Images mainImage = productService.saveImage(dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+                Images detailImage = productService.saveImage(dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
+                Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
                 productService.saveOption(option);
             }
             else{
                 Product_Options option = options.get(i);
                 Bag inform = (Bag)option.getInformation();
-                inform.update(kinds[i],materials[i],colors[i],sizes[i],producers[i],madeIn[i],
-                        precautions[i],qualityAssuranceStandards[i],afterServiceAddresses[i]);
-                option.update(optionNames[i],
-                        productService.updateImage(option.getMainImage(),mainImageMap.get(i),i+"_main.jpg",product),
-                        productService.updateImage(option.getDetailImage(),detailImageMap.get(i),i+"_detail.jpg",product),
-                        Long.parseLong(optionPrices[i]),
-                        Long.parseLong(optionStocks[i]),
-                        optionState[i]);
+                dto.updateInformation(i,inform);
+                dto.getProductDto().updateOption(i,option,
+                        productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product),
+                        productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
             }
         }
 
