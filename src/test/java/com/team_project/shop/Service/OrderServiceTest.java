@@ -172,9 +172,9 @@ public class OrderServiceTest {
                 .totalPrice(1000l).deliveryFee(500l).totalPayment(1500l).destination("경기도").cartId(Arrays.asList(cart1.getId(), cart2.getId())).couponId(0l).build();
         Long orderId = orderService.save(user, saveRequestDtodto);
 
-        OrdersResponseDto responseDto = orderService.findById(orderId);
+        Optional<OrdersResponseDto> responseDto = orderService.findById(orderId);
 
-        assertThat(responseDto.getId()).isEqualTo(orderId);
-        assertThat(responseDto.getTotalPrice()).isEqualTo(1000);
+        assertThat(responseDto.get().getId()).isEqualTo(orderId);
+        assertThat(responseDto.get().getTotalPrice()).isEqualTo(1000);
     }
 }

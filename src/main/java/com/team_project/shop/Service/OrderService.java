@@ -5,6 +5,7 @@ import com.team_project.shop.domain.cart.CartsRepository;
 import com.team_project.shop.domain.coupon.CouponRepository;
 import com.team_project.shop.domain.middleEntity.OrderDetails;
 import com.team_project.shop.domain.middleEntity.OrderDetailsRepository;
+import com.team_project.shop.domain.order.OrderStatus;
 import com.team_project.shop.domain.order.Orders;
 import com.team_project.shop.domain.order.OrdersRepository;
 import com.team_project.shop.domain.product.Product_OptionsRepository;
@@ -62,16 +63,18 @@ public class OrderService {
         Optional<Orders> order = ordersRepository.findById(orderId);
         if(!order.isPresent())
             return 0l;
+        if(!order.get().getOrderStatus().equals(OrderStatus.NEW))
+            return 0l;  //주문완료상태일때만 삭제가능함,
         ordersRepository.deleteById(orderId);
         return orderId;
     }
 
     @Transactional(readOnly = true)
-    public OrdersResponseDto findById(Long orderId){
+    public Optional<OrdersResponseDto> findById(Long orderId){
         Optional<Orders> order = ordersRepository.findById(orderId);
         if(!order.isPresent())
-            return null;    //예외처리방법 알아보기 optional리턴하고 컨트롤러에서 처리할 방향으로 생각 중
-        return OrdersResponseDto.builder().orders(order.get()).build();
+            return Optional.ofNullable(null);    //예외처리방법 알아보기 optional리턴하고 컨트롤러에서 처리할 방향으로 생각 중
+        return Optional.of(OrdersResponseDto.builder().orders(order.get()).build());
 
     }
 
