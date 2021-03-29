@@ -24,7 +24,7 @@ public class OrdersResponseDto {
     private Long deliveryFee;
     private OrderStatus orderStatus;
     private Coupon coupon;
-    private List<OrderDetailsResponseDto> orderDetailsResponseDtos;
+    private List<OrderDetailsResponseDto> orderDetails;
     private String createdDate;
     private String modifiedDate;
 
@@ -36,7 +36,7 @@ public class OrdersResponseDto {
         this.deliveryFee = orders.getDeliveryFee();
         this.orderStatus = orders.getOrderStatus();
         this.coupon = orders.getCoupon();
-        this.orderDetailsResponseDtos = orders.getOrderDetails()
+        this.orderDetails = orders.getOrderDetails()
                 .stream().map(OrderDetailsResponseDto::new).collect(Collectors.toList());
         this.createdDate = orders.getFormattiedCreateDate();
         this.modifiedDate = orders.getFormattiedModifyDate();

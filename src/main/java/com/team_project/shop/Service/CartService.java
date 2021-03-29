@@ -66,13 +66,13 @@ public class CartService {
         그 외에는 조회된 carts id값 리턴
      */
     @Transactional(readOnly = true)
-    public CartsResponseDto findById(Long cartId){
+    public Optional<CartsResponseDto> findById(Long cartId){
         Optional<Carts> cart = cartsRepository.findById(cartId);
         if(!cart.isPresent())
-            return null; //예외처리 방법에 대해 알아보기
-        return CartsResponseDto.builder()
+            return Optional.ofNullable(null);
+        return Optional.of(CartsResponseDto.builder()
                 .carts(cart.get())
-                .build();
+                .build());
     }
 
     //이부분은 null check 필요x 컬렉션은 비어있는지만 체크하면되니까

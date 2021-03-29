@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Optional;
+
 import static org.junit.Assert.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -123,11 +125,11 @@ public class CartServiceTest {
         CartsSaveRequestDto saveDto = CartsSaveRequestDto.builder().productOptionId(productOption1.getId()).quantity(1l).build();
         Long cartId = cartService.save(user, saveDto);
 
-        CartsResponseDto dto = cartService.findById(cartId);
+        Optional<CartsResponseDto> dto = cartService.findById(cartId);
 
-        assertThat(dto.getId()).isEqualTo(cartId);
-        assertThat(dto.getUser().getId()).isEqualTo(user.getId());
-        assertThat(dto.getQuantity()).isEqualTo(1);
+        assertThat(dto.get().getId()).isEqualTo(cartId);
+        assertThat(dto.get().getUser().getId()).isEqualTo(user.getId());
+        assertThat(dto.get().getQuantity()).isEqualTo(1);
 
     }
 }

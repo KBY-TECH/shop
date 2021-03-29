@@ -93,4 +93,9 @@ public class UsersService implements UsersService_IFS {
         loginService_ifs.logout();
         return RESPONSE_OK;
     }
+
+    @Transactional(readOnly = true)
+    public Users findById(Long id) {
+        return usersRepository.findById(id).get();
+    }
 }
