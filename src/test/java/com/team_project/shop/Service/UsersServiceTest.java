@@ -57,8 +57,9 @@ class UsersServiceTest {
     public void LoginValid()
     {
         UserRequestDto dto= UserRequestDto.of("aaa@naver.com", "", "abc123!");
-        ResponseEntity<HttpStatus> login = usersService_ifs.login(dto);
-        Assertions.assertThat(login).isEqualTo(RESPONSE_OK);
+
+//        ResponseEntity<HttpStatus> login = usersService_ifs.login(dto);
+//        Assertions.assertThat(login).isEqualTo(RESPONSE_OK);
         SessionUser sessionUser=(SessionUser)httpSession.getAttribute("user");
         Assertions.assertThat(sessionUser).isNotNull();
         org.junit.jupiter.api.Assertions.assertEquals(sessionUser.getEmail(),dto.getEmail());
@@ -69,8 +70,8 @@ class UsersServiceTest {
     public void LoginNotValid()
     {
         UserRequestDto dto= UserRequestDto.of("aaa@naver.com", "", "abc");
-        ResponseEntity<HttpStatus> login = usersService_ifs.login(dto);
-        Assertions.assertThat(login).isEqualTo(RESPONSE_UNAUTHORIZED);
+//        ResponseEntity<HttpStatus> login = usersService_ifs.login(dto);
+//        Assertions.assertThat(login).isEqualTo(RESPONSE_UNAUTHORIZED);
         SessionUser sessionUser=(SessionUser)httpSession.getAttribute("user");
         Assertions.assertThat(sessionUser).isNull();
     }

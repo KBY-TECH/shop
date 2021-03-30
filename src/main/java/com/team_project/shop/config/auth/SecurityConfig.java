@@ -27,14 +27,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/css/**", "/images/**",
-                        "/js/**", "/h2-console/**").permitAll()
+                .antMatchers("/signUpForm","/loginForm","/css/**", "/images/**",
+                        "/js/**", "/h2-console/**","/api/user/**").permitAll()
                 .antMatchers("/product/api/**").hasRole(Role.USER.name())
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/")
-                .loginProcessingUrl("/login") //
+                .loginPage("/loginForm")
+                .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/")
                 .and()
                 .logout()
