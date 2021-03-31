@@ -5,6 +5,8 @@ import com.team_project.shop.domain.BaseEntity;
 import com.team_project.shop.domain.middleEntity.User_Coupon;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.*;
@@ -14,7 +16,7 @@ import java.util.*;
 @ToString
 @DynamicUpdate
 @Entity
-public class Users extends BaseEntity {
+public class Users extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
     private String name;
@@ -81,4 +83,33 @@ public class Users extends BaseEntity {
     }
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
