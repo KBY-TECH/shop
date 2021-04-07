@@ -41,7 +41,7 @@ public class ProductsResponseDto {
         public CategoryProductListDto(List<Category> categories,List<CategoryProductItemDto> items){
             this.categories = new ArrayList<>();
             for(Category category : categories){
-                this.categories.add(category.getName());
+                this.categories.add(category.getClassification().getSubClass());
             }
             this.products = items;
         }
@@ -60,7 +60,7 @@ public class ProductsResponseDto {
             this.sellerName = product.getUser().getName();
             this.categories = new ArrayList<>();
             for(Category category : product.getCategories()){
-                this.categories.add(category.getName());
+                this.categories.add(category.getClassification().getSubClass());
             }
             this.options = options;
         }
@@ -79,7 +79,7 @@ public class ProductsResponseDto {
             this.productName = product.getName();
             this.categories = new ArrayList<>();
             for(Category category : product.getCategories()){
-                this.categories.add(category.getName());
+                this.categories.add(category.getClassification().getSubClass());
             }
             this.created = product.getCreated();
         }

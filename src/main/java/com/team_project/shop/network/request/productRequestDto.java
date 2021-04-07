@@ -140,14 +140,16 @@ public class productRequestDto {
         private String[] importedFood;
         private String[] precaution;
         private String[] consumerCounselingPhoneNum;
+        private String[] capacityByPackingUnit;
 
         @Builder
         public FoodsDto(MultipartHttpServletRequest request){
             this.producer = request.getParameterValues("producer");
             this.qualityMaintenanceDate = request.getParameterValues("qualityMaintenanceDate");
             this.importedFood = request.getParameterValues("importedFood");
-            this.precaution = request.getParameterValues("precaution");
+            this.precaution = request.getParameterValues("precautions");
             this.consumerCounselingPhoneNum = request.getParameterValues("consumerCounselingPhoneNum");
+            this.capacityByPackingUnit = request.getParameterValues("capacityByPackingUnit");
         }
     }
 
@@ -156,7 +158,6 @@ public class productRequestDto {
         private ProductOptionsDto productDto;
         private FoodsDto foodsDto;
         private String[] foodType;
-        private String[] capacityByPackingUnit;
         private String[] materialContent;
         private String[] nutritionalIngredients;
         private String[] geneticallyModified;
@@ -166,7 +167,6 @@ public class productRequestDto {
             this.productDto = ProductOptionsDto.builder().request(request).build();
             this.foodsDto = FoodsDto.builder().request(request).build();
             this.foodType = request.getParameterValues("foodType");
-            this.capacityByPackingUnit = request.getParameterValues("capacityByPackingUnit");
             this.materialContent = request.getParameterValues("materialContent");
             this.nutritionalIngredients = request.getParameterValues("nutritionalIngredients");
             this.geneticallyModified = request.getParameterValues("geneticallyModified");
@@ -180,7 +180,7 @@ public class productRequestDto {
                     .precaution(foodsDto.getPrecaution()[id])
                     .consumerCounselingPhoneNum(foodsDto.getConsumerCounselingPhoneNum()[id])
                     .foodType(foodType[id])
-                    .capacityByPackingUnit(capacityByPackingUnit[id])
+                    .capacityByPackingUnit(foodsDto.getCapacityByPackingUnit()[id])
                     .materialContent(materialContent[id])
                     .nutritionalIngredients(nutritionalIngredients[id])
                     .geneticallyModified(geneticallyModified[id])
@@ -192,7 +192,7 @@ public class productRequestDto {
                     foodType[id],
                     foodsDto.getProducer()[id],
                     foodsDto.getQualityMaintenanceDate()[id],
-                    capacityByPackingUnit[id],
+                    foodsDto.getCapacityByPackingUnit()[id],
                     materialContent[id],
                     nutritionalIngredients[id],
                     geneticallyModified[id],
@@ -228,6 +228,7 @@ public class productRequestDto {
             return Meats.builder()
                     .producer(foodsDto.getProducer()[id])
                     .qualityMaintenanceDate(foodsDto.getQualityMaintenanceDate()[id])
+                    .capacityByPackingUnit(foodsDto.getCapacityByPackingUnit()[id])
                     .importedFood(foodsDto.getImportedFood()[id])
                     .precaution(foodsDto.getPrecaution()[id])
                     .consumerCounselingPhoneNum(foodsDto.getConsumerCounselingPhoneNum()[id])
@@ -242,6 +243,7 @@ public class productRequestDto {
         public void updateInformation(int id, Meats information){
             information.update(
                     meatPart[id],
+                    foodsDto.getCapacityByPackingUnit()[id],
                     foodsDto.getProducer()[id],
                     origin[id],
                     foodsDto.getQualityMaintenanceDate()[id],
@@ -261,7 +263,6 @@ public class productRequestDto {
         private FoodsDto foodsDto;
         private String[] foodName;
         private String[] foodType;
-        private String[] capacityByPackingUnit;
         private String[] materialContent;
         private String[] nutritionalIngredients;
         private String[] geneticallyModified;
@@ -271,8 +272,7 @@ public class productRequestDto {
             this.productDto = ProductOptionsDto.builder().request(request).build();
             this.foodsDto = FoodsDto.builder().request(request).build();
             this.foodName = request.getParameterValues("foodName");
-            this.foodType = request.getParameterValues("fooodType");
-            this.capacityByPackingUnit = request.getParameterValues("capacityByPackingUnit");
+            this.foodType = request.getParameterValues("foodType");
             this.materialContent = request.getParameterValues("materialContent");
             this.nutritionalIngredients = request.getParameterValues("nutritionalIngredients");
             this.geneticallyModified = request.getParameterValues("geneticallyModified");
@@ -287,7 +287,7 @@ public class productRequestDto {
                     .consumerCounselingPhoneNum(foodsDto.getConsumerCounselingPhoneNum()[id])
                     .foodName(foodName[id])
                     .foodType(foodType[id])
-                    .capacityByPackingUnit(capacityByPackingUnit[id])
+                    .capacityByPackingUnit(foodsDto.getCapacityByPackingUnit()[id])
                     .materialContent(materialContent[id])
                     .nutritionalIngredients(nutritionalIngredients[id])
                     .geneticallyModified(geneticallyModified[id])
@@ -303,7 +303,7 @@ public class productRequestDto {
                     foodsDto.getConsumerCounselingPhoneNum()[id],
                     foodName[id],
                     foodType[id],
-                    capacityByPackingUnit[id],
+                    foodsDto.getCapacityByPackingUnit()[id],
                     materialContent[id],
                     nutritionalIngredients[id],
                     geneticallyModified[id]

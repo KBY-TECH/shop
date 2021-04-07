@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/product")
@@ -26,10 +27,10 @@ public class ProductController {
     private final UsersRepository usersRepository;
 
     @GetMapping("/seller")
-    public String getRegistrationForm(@LoginUser SessionUser user){
+    public String getCategorySelectForm(Model model, @LoginUser SessionUser user){
         if(user == null) return "index";
-
-        return "seller/new_product_bag";
+        model.addAttribute("loginUser",user.getName());
+        return "seller/new_category_select";
     }
     @GetMapping("/seller/user")
     public String getSellerProductList(@LoginUser SessionUser user, Model model){
@@ -45,14 +46,26 @@ public class ProductController {
         model.addAttribute("products",dto);
         return "seller/product_list";
     }
+    @GetMapping("/seller/productType={productType}")
+    public String getRegistrationForm(@PathVariable String productType, Model model, @LoginUser SessionUser user){
+        if(user == null) return "index";
+        model.addAttribute("loginUser",user.getName());
+        return "seller/new_product_"+productType;
+    }
+
     @GetMapping("/seller/{productID}")
     public String getUpdateForm(@PathVariable Long productID,@LoginUser SessionUser user, Model model){
         if(user==null) return "index";
         //상품이 존재하지 않는 경우 생성페이지로 넘기고 alert.
         Products product = productService.findById(productID);
         List<String> categories = new ArrayList<>();
-        for(Category category : product.getCategories()){
-            categories.add(category.getName());
+        String type = "";
+        for(int i=0; i<product.getCategories().size(); i++){
+            Category category = product.getCategories().get(i);
+            if(i==0){
+                type = category.getName().toLowerCase(Locale.ROOT);
+            }
+            categories.add(category.getClassification().getSubClass());
         }
         List<Product_Options> options = productService.findAllByProductId(productID);
         List<ProductsResponseDto.ProductOptions> dto = new ArrayList<>();
@@ -66,7 +79,7 @@ public class ProductController {
         model.addAttribute("categories",categories);
         model.addAttribute("options",dto);
         model.addAttribute("optionSize",options.size());
-        return "seller/update_product_bag";
+        return "seller/update_product_"+type;
     }
 
     @GetMapping("/categories/{categoryId}")
@@ -98,6 +111,7 @@ public class ProductController {
     @GetMapping("/{productID}")
     public String getProductDetail(@PathVariable Long productID, Model model){
         Products product = productService.findById(productID);
+        String type = product.getCategories().get(0).getName().toLowerCase(Locale.ROOT);
         List<Product_Options> options = productService.findAllByProductId(productID);
         ProductsResponseDto.ProductDetailDto dto = ProductsResponseDto.ProductDetailDto.builder()
                 .product(product)
@@ -105,14 +119,15 @@ public class ProductController {
                 .build();
         model.addAttribute("product",dto);
         //상품 카테고리마다 html만 다른 값으로 리턴할 예정
-        return "item/bag";
+        return "item/"+type;
     }
 
     @PostMapping("/meat")
-    public String createMeat(MultipartHttpServletRequest request, @LoginUser Users user){
+    public String createMeat(MultipartHttpServletRequest request, @LoginUser SessionUser user){
         Category category = productService.findCategory("Meat");
         productRequestDto.MeatsDto dto = productRequestDto.MeatsDto.builder().request(request).build();
-        Products product = dto.getProductDto().toProductEntity(user, category);
+        Users userResult = usersRepository.findById(user.getId()).get();
+        Products product = dto.getProductDto().toProductEntity(userResult, category);
         productService.saveProduct(product);
         for(int i=0; i<dto.getProductDto().Length(); i++){
             Informations inform = dto.toInformationEntity(i);
@@ -122,7 +137,7 @@ public class ProductController {
             Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
             productService.saveOption(option);
         }
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PutMapping("/meat/{productId}")
@@ -150,14 +165,15 @@ public class ProductController {
                         productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
             }
         }
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PostMapping("/frozenfood")
-    public String createFrozenFood(MultipartHttpServletRequest request, @LoginUser Users user){
+    public String createFrozenFood(MultipartHttpServletRequest request, @LoginUser SessionUser user){
         Category category = productService.findCategory("FrozenFood");
         productRequestDto.FrozenFoodsDto dto = productRequestDto.FrozenFoodsDto.builder().request(request).build();
-        Products product = dto.getProductDto().toProductEntity(user, category);
+        Users userResult = usersRepository.findById(user.getId()).get();
+        Products product = dto.getProductDto().toProductEntity(userResult, category);
         productService.saveProduct(product);
         for(int i=0;i<dto.getProductDto().Length(); i++){
             Informations inform = dto.toInformationEntity(i);
@@ -167,7 +183,7 @@ public class ProductController {
             Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
             productService.saveOption(option);
         }
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PutMapping("/frozenfood/{productId}")
@@ -195,14 +211,15 @@ public class ProductController {
                         productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
             }
         }
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PostMapping("/outer")
-    public String createOuter(MultipartHttpServletRequest request, @LoginUser Users user){
+    public String createOuter(MultipartHttpServletRequest request, @LoginUser SessionUser user){
         Category category = productService.findCategory("Outer");
         productRequestDto.OuterDto dto = productRequestDto.OuterDto.builder().request(request).build();
-        Products product = dto.getProductDto().toProductEntity(user, category);
+        Users userResult = usersRepository.findById(user.getId()).get();
+        Products product = dto.getProductDto().toProductEntity(userResult, category);
         productService.saveProduct(product);
         for(int i=0; i<dto.getProductDto().Length(); i++){
             Informations inform = dto.toInformationEntity(i);
@@ -212,7 +229,7 @@ public class ProductController {
             Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
             productService.saveOption(option);
         }
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PutMapping("/outer/{productId}")
@@ -240,14 +257,15 @@ public class ProductController {
                         productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
             }
         }
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PostMapping("/pants")
-    public String createPants(MultipartHttpServletRequest request, @LoginUser Users user){
+    public String createPants(MultipartHttpServletRequest request, @LoginUser SessionUser user){
         Category category = productService.findCategory("Pants");
         productRequestDto.PantsDto dto = productRequestDto.PantsDto.builder().request(request).build();
-        Products product = dto.getProductDto().toProductEntity(user, category);
+        Users userResult = usersRepository.findById(user.getId()).get();
+        Products product = dto.getProductDto().toProductEntity(userResult, category);
         productService.saveProduct(product);
         for(int i=0; i<dto.getProductDto().Length(); i++){
             Informations inform = dto.toInformationEntity(i);
@@ -257,7 +275,7 @@ public class ProductController {
             Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
             productService.saveOption(option);
         }
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PutMapping("/pants/{productId}")
@@ -286,13 +304,15 @@ public class ProductController {
             }
         }
 
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
-    @PostMapping("/seafoods")
-    public String createSeaFoods(@RequestBody productRequestDto.SeaFoodsDto dto, @LoginUser Users user){
-        Category category = productService.findCategory("Seafoods");
-        Products product = dto.getProductDto().toProductEntity(user, category);
+    @PostMapping("/seafood")
+    public String createSeaFoods(MultipartHttpServletRequest request, @LoginUser SessionUser user){
+        Category category = productService.findCategory("SeaFood");
+        productRequestDto.SeaFoodsDto dto = productRequestDto.SeaFoodsDto.builder().request(request).build();
+        Users userResult = usersRepository.findById(user.getId()).get();
+        Products product = dto.getProductDto().toProductEntity(userResult, category);
         productService.saveProduct(product);
         for(int i=0; i<dto.getProductDto().Length(); i++){
             Informations inform = dto.toInformationEntity(i);
@@ -302,10 +322,10 @@ public class ProductController {
             Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
             productService.saveOption(option);
         }
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
-    @PutMapping("/seafoods/{productId}")
+    @PutMapping("/seafood/{productId}")
     public String updateSeaFoods(@PathVariable Long productId, MultipartHttpServletRequest request){
         Products product = productService.findById(productId);
         productRequestDto.SeaFoodsDto dto = productRequestDto.SeaFoodsDto.builder().request(request).build();
@@ -331,14 +351,15 @@ public class ProductController {
             }
         }
 
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PostMapping("/sportswear")
-    public String createSportswear(MultipartHttpServletRequest request, @LoginUser Users user){
+    public String createSportswear(MultipartHttpServletRequest request, @LoginUser SessionUser user){
         Category category = productService.findCategory("Sportswear");
+        Users userResult = usersRepository.findById(user.getId()).get();
         productRequestDto.SportswearDto dto = productRequestDto.SportswearDto.builder().request(request).build();
-        Products product = dto.getProductDto().toProductEntity(user, category);
+        Products product = dto.getProductDto().toProductEntity(userResult, category);
         productService.saveProduct(product);
         for(int i=0; i<dto.getProductDto().Length(); i++){
             Informations inform = dto.toInformationEntity(i);
@@ -348,7 +369,7 @@ public class ProductController {
             Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
             productService.saveOption(option);
         }
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PutMapping("/sportswear/{productId}")
@@ -377,14 +398,15 @@ public class ProductController {
             }
         }
 
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PostMapping("/top")
-    public String createTop(MultipartHttpServletRequest request, @LoginUser Users user){
+    public String createTop(MultipartHttpServletRequest request, @LoginUser SessionUser user){
         Category category = productService.findCategory("Outer");
         productRequestDto.TopDto dto = productRequestDto.TopDto.builder().request(request).build();
-        Products product = dto.getProductDto().toProductEntity(user, category);
+        Users userResult = usersRepository.findById(user.getId()).get();
+        Products product = dto.getProductDto().toProductEntity(userResult, category);
         productService.saveProduct(product);
         for(int i=0; i<dto.getProductDto().Length(); i++){
             Informations inform = dto.toInformationEntity(i);
@@ -394,7 +416,7 @@ public class ProductController {
             Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
             productService.saveOption(option);
         }
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PutMapping("/top/{productId}")
@@ -423,14 +445,15 @@ public class ProductController {
             }
         }
 
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PostMapping("/underwear")
-    public String createUnderWear(MultipartHttpServletRequest request, @LoginUser Users user){
+    public String createUnderwear(MultipartHttpServletRequest request, @LoginUser SessionUser user){
         Category category = productService.findCategory("UnderWear");
+        Users userResult = usersRepository.findById(user.getId()).get();
         productRequestDto.UnderWearDto dto = productRequestDto.UnderWearDto.builder().request(request).build();
-        Products product = dto.getProductDto().toProductEntity(user, category);
+        Products product = dto.getProductDto().toProductEntity(userResult, category);
         productService.saveProduct(product);
         for(int i=0; i<dto.getProductDto().Length(); i++){
             Informations inform = dto.toInformationEntity(i);
@@ -469,14 +492,15 @@ public class ProductController {
             }
         }
 
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PostMapping("/wallet")
-    public String createWallet(MultipartHttpServletRequest request, @LoginUser Users user){
+    public String createWallet(MultipartHttpServletRequest request, @LoginUser SessionUser user){
         Category category = productService.findCategory("Wallet");
+        Users userResult = usersRepository.findById(user.getId()).get();
         productRequestDto.WalletDto dto = productRequestDto.WalletDto.builder().request(request).build();
-        Products product = dto.getProductDto().toProductEntity(user, category);
+        Products product = dto.getProductDto().toProductEntity(userResult, category);
         productService.saveProduct(product);
         for(int i=0; i<dto.getProductDto().Length(); i++){
             Informations inform = dto.toInformationEntity(i);
@@ -515,7 +539,7 @@ public class ProductController {
             }
         }
 
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PostMapping("/bag")
