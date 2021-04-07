@@ -30,11 +30,12 @@ public class Meats extends Food {
     @Column
     private String storageMethod;
 
+
     @Builder
-    public Meats(String meatPart,String producer, String origin, String qualityMaintenanceDate,
+    public Meats(String meatPart, String capacityByPackingUnit,String producer, String origin, String qualityMaintenanceDate,
                  String indication, String importedFood, String composition,
                  String storageMethod, String precaution, String consumerCounselingPhoneNum) {
-        super(producer,qualityMaintenanceDate,importedFood,precaution,consumerCounselingPhoneNum);
+        super(producer,capacityByPackingUnit,qualityMaintenanceDate,importedFood,precaution,consumerCounselingPhoneNum);
         this.meatPart = meatPart;
         this.origin = origin;
         this.indication = indication;
@@ -42,10 +43,10 @@ public class Meats extends Food {
         this.storageMethod = storageMethod;
     }
 
-    public void update(String meatPart,String producer, String origin, String qualityMaintenanceDate,
+    public void update(String meatPart, String capacityByPackingUnit,String producer, String origin, String qualityMaintenanceDate,
                  String indication, String importedFood, String composition,
                  String storageMethod, String precaution, String consumerCounselingPhoneNum) {
-        super.update(producer,qualityMaintenanceDate,importedFood,precaution,consumerCounselingPhoneNum);
+        super.update(producer,capacityByPackingUnit,qualityMaintenanceDate,importedFood,precaution,consumerCounselingPhoneNum);
         this.meatPart = meatPart;
         this.origin = origin;
         this.indication = indication;

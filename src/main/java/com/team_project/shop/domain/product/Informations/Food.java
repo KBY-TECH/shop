@@ -31,18 +31,23 @@ public abstract class Food extends Informations {
     @Column
     private String consumerCounselingPhoneNum;
 
-    public Food(String producer, String qualityMaintenanceDate, String importedFood,
+    @Column
+    private String capacityByPackingUnit;
+
+    public Food(String producer, String capacityByPackingUnit,String qualityMaintenanceDate, String importedFood,
                 String precaution, String consumerCounselingPhoneNum) {
         this.producer = producer;
+        this.capacityByPackingUnit = capacityByPackingUnit;
         this.qualityMaintenanceDate = qualityMaintenanceDate;
         this.importedFood = importedFood;
         this.precaution = precaution;
         this.consumerCounselingPhoneNum = consumerCounselingPhoneNum;
     }
 
-    public void update(String producer, String qualityMaintenanceDate, String importedFood,
+    public void update(String producer, String capacityByPackingUnit,String qualityMaintenanceDate, String importedFood,
                 String precaution, String consumerCounselingPhoneNum) {
         this.producer = producer;
+        this.capacityByPackingUnit = capacityByPackingUnit;
         this.qualityMaintenanceDate = qualityMaintenanceDate;
         this.importedFood = importedFood;
         this.precaution = precaution;

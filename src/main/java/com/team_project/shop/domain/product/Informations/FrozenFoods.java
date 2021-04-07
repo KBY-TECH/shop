@@ -18,8 +18,6 @@ public class FrozenFoods extends Food {
     @Column
     private String foodType;
 
-    @Column
-    private String capacityByPackingUnit;
 
     @Column
     private String materialContent;
@@ -35,9 +33,8 @@ public class FrozenFoods extends Food {
                        String capacityByPackingUnit, String materialContent,
                        String nutritionalIngredients, String geneticallyModified,
                        String precaution, String importedFood, String consumerCounselingPhoneNum){
-        super(producer,qualityMaintenanceDate,importedFood,precaution,consumerCounselingPhoneNum);
+        super(producer,capacityByPackingUnit,qualityMaintenanceDate,importedFood,precaution,consumerCounselingPhoneNum);
         this.foodType = foodType;
-        this.capacityByPackingUnit = capacityByPackingUnit;
         this.materialContent = materialContent;
         this.nutritionalIngredients = nutritionalIngredients;
         this.geneticallyModified = geneticallyModified;
@@ -47,9 +44,8 @@ public class FrozenFoods extends Food {
                        String capacityByPackingUnit, String materialContent,
                        String nutritionalIngredients, String geneticallyModified,
                        String precaution, String importedFood, String consumerCounselingPhoneNum){
-        super.update(producer,qualityMaintenanceDate,importedFood,precaution,consumerCounselingPhoneNum);
+        super.update(producer,capacityByPackingUnit,qualityMaintenanceDate,importedFood,precaution,consumerCounselingPhoneNum);
         this.foodType = foodType;
-        this.capacityByPackingUnit = capacityByPackingUnit;
         this.materialContent = materialContent;
         this.nutritionalIngredients = nutritionalIngredients;
         this.geneticallyModified = geneticallyModified;
