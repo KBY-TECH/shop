@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {{>include/head}}
+</head>
+<body class="ecommerce">
+{{>include/seller/header}}
+<div class="main">
+    <div class="container">
+        <h1>상품개별등록</h1>
+        <h2>카테고리명을 목록에서 선택해주세요</h2>
+        <div>
+            <div class="list-group main-list">
+                <a href="#" class="list-group-item list-group-item-action" id="food">식품<i class="fa fa-angle-right"></i></a>
+                <a href="#" class="list-group-item list-group-item-action" id="clothes">의류<i class="fa fa-angle-right"></i></a>
+                <a href="#" class="list-group-item list-group-item-action" id="accessories">잡화<i class="fa fa-angle-right"></i></a>
+            </div>
+            <div class="list-group food" style="display: none">
+                <a href="#" class="list-group-item list-group-item-action" id="meat">육류<i class="fa fa-angle-right"></i></a>
+                <a href="#" class="list-group-item list-group-item-action" id="seafood">해산물<i class="fa fa-angle-right"></i></a>
+                <a href="#" class="list-group-item list-group-item-action" id="frozenfood">냉동식품<i class="fa fa-angle-right"></i></a>
+            </div>
+            <div class="list-group clothes" style="display: none">
+                <a href="#" class="list-group-item list-group-item-action" id="top">상의<i class="fa fa-angle-right"></i></a>
+                <a href="#" class="list-group-item list-group-item-action" id="pants">바지<i class="fa fa-angle-right"></i></a>
+                <a href="#" class="list-group-item list-group-item-action" id="outer">코트/점퍼<i class="fa fa-angle-right"></i></a>
+                <a href="#" class="list-group-item list-group-item-action" id="underwear">속옷<i class="fa fa-angle-right"></i></a>
+                <a href="#" class="list-group-item list-group-item-action" id="sportswear">스포츠웨어<i class="fa fa-angle-right"></i></a>
+            </div>
+            <div class="list-group accessories" style="display: none">
+                <a href="#" class="list-group-item list-group-item-action" id="bag">가방<i class="fa fa-angle-right"></i></a>
+                <a href="#" class="list-group-item list-group-item-action" id="wallet">지갑<i class="fa fa-angle-right"></i></a>
+            </div>
+        </div>
+        <div class="list-result">
+            <h2>카테고리 선택 결과</h2>
+            <div class="list-box">
+                <div class="list-group-item" id="result-category1">
+
+                </div>
+                <div class="list-group-item" id="result-category2">
+
+                </div>
+                <a href="#" class="btn-next" style="display: none"><button type="button" class="btn btn-primary">다음 단계</button></a>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    {{>include/seller/footer}}
+    <script>
+        var parentCategory="";
+        var leafCategory="";
+        var btnNext = $('.btn-next');
+        var resultCategory1 = $('#result-category1');
+        var resultCategory2 = $('#result-category2');
+        $('.list-group-item-action').click(function(){
+            var _this = this;
+            var parentdiv = $(this).closest('.list-group');
+            parentdiv.children('.list-group-item-action').each(function(){
+               if(this==_this){
+                   $(this).addClass('active');
+               }
+               else{
+                   $(this).removeClass('active');
+               }
+            });
+            var activeID = $(_this).attr('id');
+            if(parentdiv.hasClass('main-list')){
+                parentCategory = $(this).text();
+                leafCategory = "";
+                $('.list-group').not('.main-list').each(function(){
+                    if(!$(this).hasClass(activeID)){
+                        $(this).css('display','none');
+                    }
+                    else{
+                        $(this).css('display','block');
+                    }
+                });
+                btnNext.css('display','none');
+                resultCategory1.css('display','block');
+                resultCategory2.css('display','none');
+            }else{
+                leafCategory = $(this).text();
+                btnNext.css('display','block');
+                btnNext.attr("href","seller/productType="+activeID);
+                resultCategory2.css('display','block');
+            }
+            //2개의 변수를 두고 선택했을때의 id 값과 list-group의 클래스명으로 정리하자.
+            resultCategory1.text(parentCategory);
+            resultCategory2.text(leafCategory);
+
+        })
+    </script>
+    <style>
+        .list-group{
+            width:250px;
+            float:left;
+        }
+        @media screen and (min-width: 992px){
+            .list-result{
+                float:right;
+                position: relative;
+                top:-50px;
+                /*right:-120px;*/
+            }
+        }
+        .list-result{
+            width: 300px;
+            height:300px;
+        }
+        .list-box{
+            float: left;
+            border-radius: 0.3rem;
+            border: 1px solid whitesmoke;
+            padding: 1rem;
+            margin-bottom: 5px;
+            width: 300px;
+            height:300px;
+        }
+        .container > h1 , .container > h2 {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .container{
+            background: white;
+        }
+        #result-category1, #result-category2{
+            display: none;
+        }
+    </style>
+</body>
+</html>

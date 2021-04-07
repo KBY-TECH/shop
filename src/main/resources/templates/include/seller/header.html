@@ -1,0 +1,38 @@
+<!-- BEGIN TOP BAR -->
+<div class="pre-header">
+    <div class="container">
+        <div class="row">
+            <!-- BEGIN TOP BAR LEFT PART -->
+            <div class="col-md-6 col-sm-6 additional-shop-info">
+                <ul class="list-unstyled list-inline">
+                    <li><i class="fa fa-phone"></i><span>+1 456 6717</span></li>
+                </ul>
+            </div>
+            <!-- END TOP BAR LEFT PART -->
+            <!-- BEGIN TOP BAR MENU -->
+            <div class="col-md-6 col-sm-6 additional-nav">
+                <ul class="list-unstyled list-inline pull-right">
+                    {{#loginUser}}
+                    <a href="#" class="btn btn-Dark active">{{loginUser}}</a>
+                    <a class="btn btn-danger active" href="/logout">logout </a>
+                    {{/loginUser}}
+                </ul>
+            </div>
+            <!-- END TOP BAR MENU -->
+        </div>
+    </div>
+</div>
+<!-- END TOP BAR -->
+<!-- BEGIN HEADER -->
+<div class="header">
+    <div class="container">
+        <a class="site-logo" href="/"><img src="/assets/corporate/img/logos/logo-shop-red.png" alt="Metronic Shop UI"></a>
+        <div class="header-navigation">
+            <ul>
+                <li><a href="/api/product/seller">상품 등록</a></li>
+                <li><a href="/api/product/seller/user">상품 조회/수정</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Header END -->

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {{>include/head}}
+</head>
+<body class="ecommerce">
+{{>include/seller/header}}
+<div class="main">
+    <div class="container">
+        <h2>상품 등록</h2>
+        <h3>상품 기본 정보</h3>
+        <div>
+            등록 상품명
+            <input type="text" name="productName" value="{{productName}}">
+            <input type="text" id="product-id" value="{{productID}}">
+        </div>
+        <div>
+            카테고리
+            <div id="categories">의류 스포츠웨어</div>
+        </div>
+
+        <div>
+            <h3>구매옵션</h3>
+            <input type="button" class="btn-newRow" value="옵션 추가" id = "{{optionSize}}" />
+            <input type="button" class="btn-stop" value="판매상태 변경">
+            <table border="1" id="options">
+                <tr align="center">
+                    <td rowspan="2" valign="bottom"><input type="checkbox" id="check-all"></td>
+                    <td>구매옵션정보</td>
+                    <td rowspan="2">판매상태</td>
+                    <td rowspan="2">판매가격</td>
+                    <td rowspan="2">재고 수량</td>
+                    <td rowspan="2">대표 이미지</td>
+                    <td rowspan="2">상세 설명</td>
+                    <td rowspan="2">고시정보</td>
+                </tr>
+                <tr align="center">
+                    <td>색상</td>
+                </tr>
+                {{#options}}
+                <tr class="{{id}}" align="center">
+                    <td><input type="checkbox" name="check"></td>
+                    <td><input type="text" name="optionName" value="{{optionName}}"></td>
+                    <td class="state">{{state}}</td>
+                    <td><input type="text" name="price" value="{{price}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" /></td>
+                    <td><input type="text" name="stock" value="{{stock}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" /></td>
+                    <td><input type="file" name="mainImage" accept="image/jpeg, image/png"></td>
+                    <td><input type="file" name="detailImage" accept="image/jpeg, image/png"></td>
+                    <td><input type="button" class="btn-information" value="등록" onclick="openInformation(this)"></td>
+                </tr>
+                {{/options}}
+            </table>
+        </div>
+        <button id="btn-update" type="button">등록하기</button>
+    </div>
+</div>
+{{#options}}
+<div class="hover-information {{id}}" >
+    <span class="helper"></span>
+    <div class="information">
+        <p>아이템의 고시정보를 입력하세요.</p>
+        <table border="1">
+            <tr align="center">
+                <td>고시정보명</td>
+                <td>내용</td>
+            </tr>
+            <tr align="center">
+                <td>제품 소재</td>
+                <td><textarea name="material">{{information.material}}</textarea></td>
+            </tr>
+            <tr align="center">
+                <td>색상</td>
+                <td><textarea name="color">{{information.color}}</textarea></td>
+            </tr>
+            <tr align="center">
+                <td>치수</td>
+                <td><textarea name="size">{{information.size}}</textarea></td>
+            </tr>
+            <tr align="center">
+                <td>제조자(수입자)</td>
+                <td><textarea name="producer">{{information.producer}}</textarea></td>
+            </tr>
+            <tr align="center">
+                <td>제조국</td>
+                <td><textarea name="madeIn">{{information.madeIn}}</textarea></td>
+            </tr>
+            <tr align="center">
+                <td>취급시 주의사항</td>
+                <td><textarea  name="precautions">{{information.precautions}}</textarea></td>
+            </tr>
+            <tr align="center">
+                <td>품질보증기준</td>
+                <td><textarea name="qualityAssuranceStandard">{{information.qualityAssuranceStandard}}</textarea></td>
+            </tr>
+            <tr align="center">
+                <td>A/S 책임자와 전화번호</td>
+                <td><textarea name="afterServiceAddress">{{information.afterServiceAddress}}</textarea></td>
+            </tr>
+        </table>
+        <input type="button" value="등록하기" onclick="closeInformation()">
+    </div>
+</div>
+{{/options}}
+
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="/js/seller.js"></script>
+<script>
+    let btnNewRow = $('.btn-newRow');
+    let rows = Number(btnNewRow.attr('id'));
+    btnNewRow.click(function(){
+        addRow(++rows);
+        addClothes(rows);
+    });
+    post.init("sportswear");
+</script>
+</body>
+
+<!--- 이미지는 등록버튼을 누르면 팝업으로 이미지를 등록할 수 있도록 되어있음   --->
+</html>

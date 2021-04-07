@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<!-- Head BEGIN -->
+{{#product}}
+<head>
+    <title>{{productName}} | Metronic Shop UI</title>
+    {{>include/head}}
+</head>
+<!-- Head END -->
+<!-- Body BEGIN -->
+<body class="ecommerce">
+<!-- BEGIN TOP BAR -->
+{{>include/top_bar}}
+<!-- END TOP BAR -->
+<!-- BEGIN HEADER -->
+{{>include/header}}
+<!-- Header END -->
+
+<div class="main">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="">Store</a></li>
+            <li>의류</li>
+            <li class="active">스포츠웨어</li>
+        </ul>
+        <!-- BEGIN SIDEBAR & CONTENT 카테고리에 맞게 수정할 것-->
+        <div class="row margin-bottom-40">
+            <!-- BEGIN SIDEBAR -->
+            <div class="sidebar col-md-3 col-sm-5">
+                {{>include/side_bar}}
+                <!-- END SIDEBAR -->
+            </div>
+            <!-- BEGIN CONTENT 선택되어있는 옵션에 맞는 사진 출력-->
+            <div class="col-md-9 col-sm-7">
+                <div class="product-page">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+
+                            {{#options}}
+                            <div class="product-main-image {{id}}" style="display: none">
+                                <!--대표이미지-->
+                                <img src="{{mainImage.imageURL}}" alt="{{optionName}}" class="img-responsive" data-BigImgsrc="{{mainImage.imageURL}}">
+                            </div>
+                            {{/options}}
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <h1>{{productName}}</h1>
+                            {{#options}}
+                            <div class="price-availability-block clearfix {{id}}" style="display: none">
+                                <!--가격-->
+                                <div class="price">
+                                    <strong>{{price}}<span>원</span></strong>
+                                </div>
+                                <div class="availability">
+                                    <!--판매상태-->
+                                    Availability: <strong>{{state}}</strong>
+                                </div>
+                            </div>
+                            {{/options}}
+                            <!--옵션-->
+                            <div class="product-page-options">
+                                <div class="pull-left">
+                                    <select class="form-control input-sm" name="option">
+                                        {{#options}}
+                                        <option value="{{id}}" name="select-option">{{optionName}}</option>
+                                        {{/options}}
+                                    </select>
+                                </div>
+                            </div>
+                            <!--장바구니-->
+                            <div class="product-page-cart">
+                                <div class="product-quantity">
+                                    <input id="product-quantity" type="text" value="1" readonly class="form-control input-sm">
+                                </div>
+                                <button class="btn btn-primary" type="submit" onclick="toCart()">Add to cart</button>
+                            </div>
+                            <div class="review">
+                                <input type="range" value="4" step="0.25" id="backing4" readonly>
+                                <div class="rateit" data-rateit-backingfld="#backing4" data-rateit-resetable="false"  data-rateit-ispreset="true" data-rateit-min="0" data-rateit-max="5">
+                                </div>
+                            </div>
+                            <ul class="social-icons">
+                                <li><a class="facebook" data-original-title="facebook" href="javascript:;"></a></li>
+                                <li><a class="twitter" data-original-title="twitter" href="javascript:;"></a></li>
+                                <li><a class="googleplus" data-original-title="googleplus" href="javascript:;"></a></li>
+                                <li><a class="evernote" data-original-title="evernote" href="javascript:;"></a></li>
+                                <li><a class="tumblr" data-original-title="tumblr" href="javascript:;"></a></li>
+                            </ul>
+                        </div>
+
+                        {{#options}}
+                        <div class="product-page-content {{id}}" style="display: none">
+                            <ul id="myTab" class="nav nav-tabs">
+                                <li><a href="#Description" data-toggle="tab">Description</a></li>
+                                <li><a href="#Information" data-toggle="tab">Information</a></li>
+                                <li class="active"><a href="#Reviews" data-toggle="tab">Reviews (2)</a></li>
+                            </ul>
+                            <div id="myTabContent" class="tab-content">
+                                <!--                상세 설명 - 이미지로 대체-->
+                                <div class="tab-pane fade" id="Description">
+                                    <img src="{{detailImage.imageURL}}">
+                                </div>
+                                <!--                    상세 정보 카테고리마다 별도 구현필요-->
+                                <div class="tab-pane fade" id="Information">
+                                    <table class="datasheet">
+                                        <tr>
+                                            <th colspan="2">Additional features</th>
+                                        </tr>
+                                        <tr>
+                                            <td class="datasheet-features-type">제품 소재</td>
+                                            <td>{{information.material}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="datasheet-features-type">색상</td>
+                                            <td>{{information.color}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="datasheet-features-type">치수</td>
+                                            <td>{{information.size}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="datasheet-features-type">제조자(수입자)</td>
+                                            <td>{{information.producer}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="datasheet-features-type">제조국</td>
+                                            <td>{{information.madeIn}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="datasheet-features-type">취급시 주의사항</td>
+                                            <td>{{information.precautions}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="datasheet-features-type">품질보증기준</td>
+                                            <td>{{information.qualityAssuranceStandard}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="datasheet-features-type">A/S 책임자와 전화번호</td>
+                                            <td>{{information.afterServiceAddress}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade in active" id="Reviews">
+                                    <!--<p>There are no reviews for this product.</p>-->
+                                    <div class="review-item clearfix">
+                                        <div class="review-item-submitted">
+                                            <strong>Bob</strong>
+                                            <em>30/12/2013 - 07:37</em>
+                                            <div class="rateit" data-rateit-value="5" data-rateit-ispreset="true" data-rateit-readonly="true"></div>
+                                        </div>
+                                        <div class="review-item-content">
+                                            <p>Sed velit quam, auctor id semper a, hendrerit eget justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Duis vel arcu pulvinar dolor tempus feugiat id in orci. Phasellus sed erat leo. Donec luctus, justo eget ultricies tristique, enim mauris bibendum orci, a sodales lectus purus ut lorem.</p>
+                                        </div>
+                                    </div>
+                                    <div class="review-item clearfix">
+                                        <div class="review-item-submitted">
+                                            <strong>Mary</strong>
+                                            <em>13/12/2013 - 17:49</em>
+                                            <div class="rateit" data-rateit-value="2.5" data-rateit-ispreset="true" data-rateit-readonly="true"></div>
+                                        </div>
+                                        <div class="review-item-content">
+                                            <p>Sed velit quam, auctor id semper a, hendrerit eget justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Duis vel arcu pulvinar dolor tempus feugiat id in orci. Phasellus sed erat leo. Donec luctus, justo eget ultricies tristique, enim mauris bibendum orci, a sodales lectus purus ut lorem.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{/options}}
+                    </div>
+                </div>
+            </div>
+            <!-- END CONTENT -->
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+    </div>
+</div>
+
+{{>include/footer}}
+<script src="/js/item.js" type="text/javascript"></script>
+</body>
+{{/product}}
+<!-- END BODY -->
+</html>

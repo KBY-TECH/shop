@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {{>include/head}}
+</head>
+<body class="ecommerce">
+{{>include/seller/header}}
+<div class="main">
+    <div class="container">
+        <h2>상품 등록</h2>
+        <h3>상품 기본 정보</h3>
+        <div>
+            등록 상품명
+            <input type="text" name="productName">
+        </div>
+        <div>
+            카테고리
+            <div id="categories">식품 > 냉동식품</div>
+        </div>
+
+
+        <div>
+            <h3>구매옵션</h3>
+            <input type="button" class="btn-newRow" value="옵션 추가"/>
+            <table border="1" id="options">
+                <tr align="center">
+                    <td rowspan="2" valign="bottom"><input type="checkbox" id="check-all"></td>
+                    <td>구매옵션정보</td>
+                    <td rowspan="2">판매상태</td>
+                    <td rowspan="2">판매가격</td>
+                    <td rowspan="2">재고 수량</td>
+                    <td rowspan="2">대표 이미지</td>
+                    <td rowspan="2">상세 설명</td>
+                    <td rowspan="2">고시정보</td>
+                </tr>
+                <tr align="center">
+                    <td>색상</td>
+                </tr>
+                <tr class="1" align="center">
+                    <td><input type="checkbox" name="check"></td>
+                    <td ><input class="default" type="text" name="optionName"></td>
+                    <td class="state-new">새 상품</td>
+                    <td ><input class="default" type="text" name="price" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" /></td>
+                    <td ><input class="default" type="text" name="stock" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" /></td>
+                    <td ><input class="default" type="file" name="mainImage" accept="image/jpeg, image/png" value="등록"></td>
+                    <td ><input class="default" type="file" name="detailImage" accept="image/jpeg, image/png" value="등록"></td>
+                    <td><input type="button" class="btn-information" value="등록" onclick="openInformation(this)"></td>
+                </tr>
+            </table>
+        </div>
+        <button id="btn-save" type="button">등록하기</button>
+    </div>
+</div>
+<div class="hover-information 1">
+    <span class="helper"></span>
+    <div class="information">
+        <p>아이템의 고시정보를 입력하세요.</p>
+        <table border="1">
+            <tr align="center">
+                <td>고시정보명</td>
+                <td>내용</td>
+            </tr>
+            <tr align="center">
+                <td>식품의 유형</td>
+                <td><textarea class="default" name="foodType"></textarea></td>
+            </tr>
+            <tr align="center">
+                <td>생산자 및 소재지</td>
+                <td><textarea class="default" name="producer"></textarea></td>
+            </tr>
+            <tr align="center">
+                <td>제조연월일, 유통기한, 또는 품질유지기한</td>
+                <td><textarea class="default" name="qualityMaintenanceDate"></textarea></td>
+            </tr>
+            <tr align="center">
+                <td>포장단위별 내용물의 용량(중량), 수량</td>
+                <td><textarea class="default" name="capacityByPackingUnit"></textarea></td>
+            </tr>
+            <tr align="center">
+                <td>원재료명 및 함량</td>
+                <td><textarea class="default" name="materialContent"></textarea></td>
+            </tr>
+            <tr align="center">
+                <td>영양성분</td>
+                <td><textarea class="default" name="nutritionalIngredients"></textarea></td>
+            </tr>
+            <tr align="center">
+                <td>유전자변형식품에 해당하는 경우의 표시</td>
+                <td><textarea class="default" name="geneticallyModified"></textarea></td>
+            </tr>
+            <tr align="center">
+                <td>소비자안전을 위한 주의사항</td>
+                <td><textarea class="default" name="precautions"></textarea></td>
+            </tr>
+            <tr align="center">
+                <td>수입식품 문구</td>
+                <td><textarea class="default" name="importedFood"></textarea></td>
+            </tr>
+            <tr align="center">
+                <td>소비자상담관련 전화번호</td>
+                <td><textarea class="default" name="consumerCounselingPhoneNum"></textarea></td>
+            </tr>
+        </table>
+        <input type="button" value="등록하기" onclick="closeInformation()">
+    </div>
+</div>
+
+
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="/js/seller.js"></script>
+<script>
+    let rows = 1;
+    $('.btn-newRow').click(function(){
+        addRow(++rows);
+        addFrozenfood(rows);
+    });
+    post.init("frozenfood");
+</script>
+
+</body>
+
+<!--- 이미지는 등록버튼을 누르면 팝업으로 이미지를 등록할 수 있도록 되어있음   --->
+</html>
