@@ -1,3 +1,10 @@
+.main{
+    background: white;
+    box-shadow: 0 1px 3px #ddd;
+}
+.container{
+    width:1170px;
+}
 .hover-information{
     background:rgba(0,0,0,.4);
     cursor:pointer;
@@ -25,7 +32,10 @@
     vertical-align: middle;
     position: relative;
     border-radius: 8px;
-    padding: 15px 2% 50px 2%;
+    padding: 15px 2% 10px 2%;
+}
+.hover-information > button{
+    margin-top: 0.5vh;
 }
 td > textarea{
     min-width: 320px;
