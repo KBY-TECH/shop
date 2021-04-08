@@ -11,5 +11,5 @@ INSERT INTO CATEGORY values
 (10,now(),now(),'BAG','Bag',2),
 (11,now(),now(),'WALLET','Wallet',2),
 (12,now(),now(),'MEAT','Meat',3),
-(13,now(),now(),'SEAFOOD','SeaFood',3),
+(13,now(),now(),'SEA_FOOD','SeaFood',3),
 (14,now(),now(),'FROZENFOOD','FrozenFood',3);
