@@ -34,4 +34,18 @@ public class indexController {
         return "user/loginForm";
     }
 
+    @GetMapping("/publisher/loginForm")
+    public String publisherLoginForm()
+    {
+        return "publisher/loginForm";
+    }
+
+    @GetMapping("/publisher/signUpForm")
+    public String publishersignUpForm()
+    {
+        return "publisher/signUpForm";
+    }
+
+
+
 }
