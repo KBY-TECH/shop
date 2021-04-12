@@ -1,4 +1,4 @@
-package com.team_project.shop.web.API;
+package com.team_project.shop.network.response;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

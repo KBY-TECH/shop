@@ -26,7 +26,7 @@ var user = {
         }).done(function () {
             var Alert = function (msg, type) {
                 swal({
-                    title:'',
+                    title:'loading',
                     text: msg,
                     type: type,
                     timer: 1500,
@@ -36,14 +36,14 @@ var user = {
             Alert("1초 후에 로그인 화면으로 이동합니다.", 'success');
             setTimeout(() => window.location.href = '/', 1000)
         }).fail(function (error) {
-            console.log("false");
-            console.log(error);
+            // console.log("false");
+            // console.log(error);
             alert(JSON.stringify(error.responseText));
         });
     },
     check :function () {
         var email=$('#email').val();
-        console.log(email);
+        // console.log(email);
         $.ajax({
             type: 'POST',
             url: 'api/user/mailCheck?email='+email,
@@ -53,7 +53,7 @@ var user = {
             // console.log(response);
             var Alert = function (response, type) {
                 swal({
-                    title: '',
+                    title: 'success',
                     text: response,
                     timer: 1500,
                     showConfirmButton: false
@@ -63,10 +63,10 @@ var user = {
             Alert(response, 'success');
             // setTimeout(() => window.location.href = '/', 3000)
         }).fail(function (error){
-            console.log(error);
+            // console.log(error);
             var Alert = function (response, type) {
                 swal({
-                    title: '',
+                    title: 'warning!',
                     text: response,
                     icon : 'info',
                     type: type,

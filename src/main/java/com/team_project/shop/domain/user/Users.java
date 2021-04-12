@@ -61,7 +61,6 @@ public class Users extends BaseEntity implements UserDetails {
     }
 
 
-
     public Users update(String name, String picture) {
         this.name = name;
         this.picture = picture;

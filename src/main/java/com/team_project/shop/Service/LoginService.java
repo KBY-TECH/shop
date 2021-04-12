@@ -23,4 +23,7 @@ public class LoginService implements LoginService_IFS {
     public void logout() {
         httpSession.removeAttribute("user");
     }
+
+
+
 }

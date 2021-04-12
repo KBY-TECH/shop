@@ -2,7 +2,6 @@ package com.team_project.shop.Service;
 
 import com.team_project.shop.Service.IFS.LoginService_IFS;
 import com.team_project.shop.Service.IFS.UsersService_IFS;
-import com.team_project.shop.config.auth.dto.SessionUser;
 import com.team_project.shop.domain.user.Users;
 import com.team_project.shop.domain.user.UsersRepository;
 import com.team_project.shop.network.request.UserRequestDto;
@@ -12,16 +11,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
-import static com.team_project.shop.web.API.HttpStatusResponseEntity.*;
+import static com.team_project.shop.network.response.HttpStatusResponseEntity.*;
 
 @RequiredArgsConstructor
 @Slf4j

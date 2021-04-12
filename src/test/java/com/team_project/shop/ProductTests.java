@@ -1,15 +1,13 @@
+/*
 package com.team_project.shop;
 
 import com.team_project.shop.Service.ProductService;
-import com.team_project.shop.domain.product.Category;
-import com.team_project.shop.domain.product.CategoryRepository;
 import com.team_project.shop.domain.product.*;
 import com.team_project.shop.domain.user.Role;
 import com.team_project.shop.domain.user.Users;
 import com.team_project.shop.domain.user.UsersRepository;
 import com.team_project.shop.network.request.productSaveRequestDto;
 import com.team_project.shop.web.ProductController;
-import org.hamcrest.core.IsEqual;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -237,3 +235,4 @@ public class ProductTests {
 
     }
 }
+*/

@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.team_project.shop.web.API.HttpStatusResponseEntity.*;
+import static com.team_project.shop.network.response.HttpStatusResponseEntity.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
