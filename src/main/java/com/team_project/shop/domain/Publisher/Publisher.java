@@ -5,25 +5,29 @@ import com.team_project.shop.domain.user.Role;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.util.Collection;
 
 @NoArgsConstructor
 @Getter
 @Entity
-public class Publisher extends BaseEntity {
+public class Publisher extends BaseEntity implements UserDetails {
 
 
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private String businessName;
 
     @Column(nullable = false)
-    private String BusinessNumber;
+    private String businessNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -36,8 +40,39 @@ public class Publisher extends BaseEntity {
     @Builder
     public Publisher(String email, String businessNumber, Role role, String password) {
         this.email = email;
-        BusinessNumber = businessNumber;
+        this.businessNumber = businessNumber;
         this.role = role;
         this.password = password;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

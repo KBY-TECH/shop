@@ -101,7 +101,6 @@ public class UsersService implements UsersService_IFS  {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        System.out.println("username = " + email);
         Optional<Users> user=usersRepository.findByEmail(email);
         if(user.isPresent())
         {
