@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface Publisher_IFS extends UserDetailsService {
+public interface PublisherService_IFS extends UserDetailsService {
 
     public ResponseEntity<HttpStatus> signUp(PublisherCreateRequestDto requestDto);
 

@@ -53,16 +53,13 @@ class UsersServiceTest {
     }
 
     @Test
-    @DisplayName("로그인 후 valid한 사용자인지 확인.")
+    @DisplayName("sessionedUser 사용자인지 확인.")
     public void LoginValid()
     {
-        UserRequestDto dto= UserRequestDto.of("aaa@naver.com", "", "abc123!");
-
-//        ResponseEntity<HttpStatus> login = usersService_ifs.login(dto);
-//        Assertions.assertThat(login).isEqualTo(RESPONSE_OK);
+        UserRequestDto dto= UserRequestDto.of("", "aaa@naver.com", "abc123!");
+        usersService_ifs.loadUserByUsername(dto.getEmail());
         SessionUser sessionUser=(SessionUser)httpSession.getAttribute("user");
         Assertions.assertThat(sessionUser).isNotNull();
-        org.junit.jupiter.api.Assertions.assertEquals(sessionUser.getEmail(),dto.getEmail());
     }
 
     @Test

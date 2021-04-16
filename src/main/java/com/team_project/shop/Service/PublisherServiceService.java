@@ -1,7 +1,7 @@
 package com.team_project.shop.Service;
 
 import com.team_project.shop.Service.IFS.LoginService_IFS;
-import com.team_project.shop.Service.IFS.Publisher_IFS;
+import com.team_project.shop.Service.IFS.PublisherService_IFS;
 import com.team_project.shop.domain.Publisher.Publisher;
 import com.team_project.shop.domain.Publisher.PublisherRepository;
 import com.team_project.shop.network.request.PublisherCreateRequestDto;
@@ -18,12 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.team_project.shop.network.response.HttpStatusResponseEntity.RESPONSE_CONFLICT;
 import static com.team_project.shop.network.response.HttpStatusResponseEntity.RESPONSE_OK;
 
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class PublisherService implements Publisher_IFS {
+public class PublisherServiceService implements PublisherService_IFS {
     private final PublisherRepository publisherRepository;
     private final PasswordEncoder passwordEncoder;
     private final LoginService_IFS loginService;
@@ -31,6 +32,15 @@ public class PublisherService implements Publisher_IFS {
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> signUp(PublisherCreateRequestDto requestDto) {
+
+        if(isDuplicateEmail(requestDto.getEmail()))
+        {
+            return RESPONSE_CONFLICT;
+        }
+        if(isDuplicateBusinessNumber(requestDto.getBusinessNumber()))
+        {
+            return RESPONSE_CONFLICT;
+        }
         publisherRepository.save(requestDto.toEntity(passwordEncoder));
         return RESPONSE_OK;
     }
@@ -51,13 +61,15 @@ public class PublisherService implements Publisher_IFS {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isDuplicateEmail(String email) {
-        return publisherRepository.findByEmail(email).isEmpty();
+        return publisherRepository.existsByEmail(email);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isDuplicateBusinessNumber(String businessNumber) {
-        return publisherRepository.findByBusinessNumber(businessNumber).isEmpty();
+        return publisherRepository.existsByBusinessNumber(businessNumber);
     }
 
     @Override

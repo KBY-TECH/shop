@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 public class PublisherResponseDto {
 
     private String email;
-
+    private String name;
     private String BusinessNumber;
 
 

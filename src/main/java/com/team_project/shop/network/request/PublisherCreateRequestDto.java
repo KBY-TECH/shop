@@ -13,7 +13,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 @Getter
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
 @ToString
 public class PublisherCreateRequestDto {
@@ -25,9 +25,12 @@ public class PublisherCreateRequestDto {
     @NotEmpty(message = "이름을 입력하세요.")
     private String name;
 
+    @NotEmpty(message = "상호명을 입력해주세요")
+    private String businessName;
+
 
     @Pattern(regexp = "^[0-9]{10}$" ,message = "10자리의 숫자로만 입력해주세요.")
-    private String business_number;
+    private String businessNumber;
 
 
     @NotEmpty
@@ -39,7 +42,7 @@ public class PublisherCreateRequestDto {
     public Publisher toEntity(PasswordEncoder passwordEncoder)
     {
         return Publisher.builder()
-                .email(this.email).businessNumber(business_number).role(Role.PUBLISHER).password(passwordEncoder.encode(password))
+                .email(this.email).name(name).businessNumber(businessNumber).businessName(businessName).role(Role.PUBLISHER).password(passwordEncoder.encode(password))
                 .build();
     }
 }

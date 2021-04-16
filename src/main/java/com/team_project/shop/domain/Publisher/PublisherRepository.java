@@ -8,6 +8,7 @@ public interface PublisherRepository extends JpaRepository<Publisher,Long> {
 
     Optional<Publisher> findByEmail(String email);
 
-    Optional<Publisher> findByBusinessNumber(String businessNumber);
+    boolean existsByBusinessNumber(String businessNumber);
+    boolean existsByEmail(String email);
 
 }

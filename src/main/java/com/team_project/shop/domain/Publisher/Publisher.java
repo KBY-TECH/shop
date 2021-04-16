@@ -24,6 +24,9 @@ public class Publisher extends BaseEntity implements UserDetails {
     private String email;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private String businessName;
 
     @Column(nullable = false)
@@ -38,11 +41,13 @@ public class Publisher extends BaseEntity implements UserDetails {
 
 
     @Builder
-    public Publisher(String email, String businessNumber, Role role, String password) {
+    public Publisher(String email, String name,String businessNumber,String businessName, Role role, String password) {
         this.email = email;
         this.businessNumber = businessNumber;
         this.role = role;
+        this.businessName=businessName;
         this.password = password;
+        this.name=name;
     }
 
 
