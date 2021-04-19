@@ -96,7 +96,7 @@ public class UsersService implements UsersService_IFS  {
 
     @Transactional(readOnly = true)
     public Users findById(Long id) {
-        return usersRepository.findById(id).get();
+        return usersRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 정보입니다."));
     }
 
     @Override

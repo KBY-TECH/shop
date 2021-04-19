@@ -18,8 +18,7 @@ public interface UsersService_IFS extends UserDetailsService {
 
      public ResponseEntity<HttpStatus> updatePassword(UserUpdateDto requestDto);
 
-
-//    public ResponseEntity<HttpStatus> login(UserRequestDto requestDto);
+    public Users findById(Long id);
 
     public ResponseEntity<HttpStatus>  logout();
 

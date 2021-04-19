@@ -30,6 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/signUpForm","/loginForm","/css/**", "/images/**",
                         "/js/**", "/h2-console/**","/api/user/**","/publisher/loginForm","/publisher/signUpForm","/api/publisher/**").permitAll()
                 .antMatchers("/product/api/**").hasRole(Role.USER.name())
+                .antMatchers("/api/user_do/**").hasRole(Role.USER.name())
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

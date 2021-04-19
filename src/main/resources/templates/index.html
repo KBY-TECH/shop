@@ -119,7 +119,8 @@ Purchase Premium Metronic Admin Theme: http://themeforest.net/item/metronic-resp
             <div class="col-md-6 col-sm-6 additional-nav">
                 <ul class="list-unstyled list-inline pull-right">
                     {{#loginUser}}
-                    <a href="#" class="btn btn-Dark active">{{loginUser}}</a>
+                    <a href="/api/user_do/{{id}}" class="btn btn-Dark active">{{loginUser}}</a>
+
                     <a class="btn btn-danger active" href="/logout">logout </a>
                     {{/loginUser}}
                     <li><a href="shop-checkout.html">Checkout</a></li>
