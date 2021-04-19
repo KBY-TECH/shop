@@ -3,59 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    {{>include/head}}
+    {{>include/seller/head}}
 </head>
 <body class="ecommerce">
 {{>include/seller/header}}
-<div class="main">
-    <div class="container">
-        <h2>상품 등록</h2>
-        <h3>상품 기본 정보</h3>
-        <div>
-            등록 상품명
-            <input type="text" name="productName" value="{{productName}}">
-            <input type="text" id="product-id" value="{{productID}}">
-        </div>
-        <div>
-            카테고리
-            <div id="categories">{{#categories}} {{.}} {{/categories}} </div>
-        </div>
+<form method="post" action="/api/product/seafood/{{productID}}" enctype="multipart/form-data">
+    <input type="hidden" name="_method" value="PUT" />
+    <div class="main">
+        <div class="container">
+            <h1>상품 등록</h1>
+            <h2 class="product-header1">1.상품 기본 정보</h2>
+            <div class="product-header2">
+                <strong>등록 상품명</strong>
+                <input type="text" name="productName" value="{{productName}}" required>
+                <input type="text" id="product-id" value="{{productID}}">
+            </div>
+            <div class="product-header2">
+                <strong>카테고리 &nbsp; &nbsp; {{#categories}} {{.}} {{/categories}} </strong>
+            </div>
 
-        <div>
-            <h3>구매옵션</h3>
-            <input type="button" class="btn-newRow" value="옵션 추가" id = "{{optionSize}}" />
-            <input type="button" class="btn-stop" value="판매상태 변경">
+            <h2 class="product-header1">2.구매옵션</h2>
+            <button class="btn-newRow btn btn-default" id="{{optionSize}}" type="button">옵션 추가</button>
+            <button class="btn-stop btn btn-default" type="button">판매상태 변경</button>
             <table border="1" id="options">
-                <tr align="center">
-                    <td rowspan="2" valign="bottom"><input type="checkbox" id="check-all"></td>
-                    <td>구매옵션정보</td>
-                    <td rowspan="2">판매상태</td>
-                    <td rowspan="2">판매가격</td>
-                    <td rowspan="2">재고 수량</td>
-                    <td rowspan="2">대표 이미지</td>
-                    <td rowspan="2">상세 설명</td>
-                    <td rowspan="2">고시정보</td>
-                </tr>
+                {{>include/seller/table_row_description}}
                 <tr align="center">
                     <td>중량 x 수량</td>
                 </tr>
                 {{#options}}
-                <tr class="{{id}}" align="center">
-                    <td><input type="checkbox" name="check"></td>
-                    <td><input type="text" name="optionName" value="{{optionName}}"></td>
-                    <td class="state">{{state}}</td>
-                    <td><input type="text" name="price" value="{{price}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" /></td>
-                    <td><input type="text" name="stock" value="{{stock}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" /></td>
-                    <td><input type="file" name="mainImage" accept="image/jpeg, image/png"></td>
-                    <td><input type="file" name="detailImage" accept="image/jpeg, image/png"></td>
-                    <td><input type="button" class="btn-information" value="등록" onclick="openInformation(this)"></td>
-                </tr>
+                {{>include/seller/table_row_input_update}}
                 {{/options}}
             </table>
+            <button class="btn btn-default" type="submit" onclick="return beforeSubmit()">등록하기</button>
         </div>
-        <button id="btn-update" type="button">등록하기</button>
     </div>
-</div>
     {{#options}}
     <div class="hover-information {{id}}" >
         <span class="helper"></span>
@@ -111,13 +92,13 @@
                     <td><textarea class="default" name="consumerCounselingPhoneNum">{{information.consumerCounselingPhoneNum}}</textarea></td>
                 </tr>
             </table>
-            <input type="button" value="등록하기" onclick="closeInformation()">
+            <button type="button" class="btn btn-default" onclick="closeInformation(this)">등록하기</button>
         </div>
     </div>
     {{/options}}
+</form>
+{{>include/seller/footer}}
 
-<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="/js/seller.js"></script>
 <script>
     let btnNewRow = $('.btn-newRow');
     let rows = Number(btnNewRow.attr('id'));
@@ -125,10 +106,6 @@
         addRow(++rows);
         addSeafood(rows);
     });
-    post.init("seafood");
-    //이미지 입력 input을 버튼으로 변경하고 클릭시 스크립트 내 array에 add하는 방식으로 변경,
 </script>
 </body>
-
-<!--- 이미지는 등록버튼을 누르면 팝업으로 이미지를 등록할 수 있도록 되어있음   --->
 </html>

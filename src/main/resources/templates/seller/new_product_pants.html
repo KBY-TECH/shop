@@ -3,114 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    {{>include/head}}
+    {{>include/seller/head}}
 </head>
 <body class="ecommerce">
 {{>include/seller/header}}
-<div class="main">
-    <div class="container">
-        <h2>상품 등록</h2>
-        <h3>상품 기본 정보</h3>
-        <div>
-            등록 상품명
-            <input type="text" name="productName">
-        </div>
-        <div>
-            카테고리
-            <div id="categories">의류 바지</div>
-        </div>
-        <div>
-            <h3>구매옵션</h3>
-            <input type="button" class="btn-newRow" value="옵션 추가"/>
+<form method="post" action="/api/product/pants" enctype="multipart/form-data">
+    <div class="main">
+        <div class="container">
+            <h1>상품 등록</h1>
+            <h2 class="product-header1">1.상품 기본 정보</h2>
+            <div class="product-header2">
+                <strong>등록 상품명</strong>
+                <input type="text" name="productName" required>
+            </div>
+            <div class="product-header2">
+                <strong>카테고리 &nbsp; &nbsp; 의류 > 바지</strong>
+            </div>
+
+            <h2 class="product-header1">2.구매옵션</h2>
+            <button class="btn-newRow btn btn-default" type="button">옵션 추가</button>
             <table border="1" id="options">
-                <tr align="center">
-                    <td rowspan="2" valign="bottom"><input type="checkbox" id="check-all"></td>
-                    <td>구매옵션정보</td>
-                    <td rowspan="2">판매상태</td>
-                    <td rowspan="2">판매가격</td>
-                    <td rowspan="2">재고 수량</td>
-                    <td rowspan="2">대표 이미지</td>
-                    <td rowspan="2">상세 설명</td>
-                    <td rowspan="2">고시정보</td>
-                </tr>
+                {{>include/seller/table_row_description}}
                 <tr align="center">
                     <td>사이즈/색상</td>
                 </tr>
-                <tr class="1" align="center">
-                    <td><input type="checkbox" name="check"></td>
-                    <td ><input class="default" type="text" name="optionName"></td>
-                    <td class="state-new">새 상품</td>
-                    <td ><input class="default" type="text" name="price" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" /></td>
-                    <td ><input class="default" type="text" name="stock" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" /></td>
-                    <td ><input class="default" type="file" name="mainImage" accept="image/jpeg, image/png" value="등록"></td>
-                    <td ><input class="default" type="file" name="detailImage" accept="image/jpeg, image/png" value="등록"></td>
-                    <td><input type="button" class="btn-information" value="등록" onclick="openInformation(this)"></td>
+                {{>include/seller/table_row_input_new}}
+            </table>
+            <button class="btn btn-default" type="submit" onclick="return beforeSubmit()">등록하기</button>
+        </div>
+    </div>
+    <div class="hover-information 1">
+        <span class="helper"></span>
+        <div class="information">
+            <p>아이템의 고시정보를 입력하세요.</p>
+            <table border="1">
+                <tr align="center">
+                    <td>고시정보명</td>
+                    <td>내용</td>
+                </tr>
+                <tr align="center">
+                    <td>제품 소재</td>
+                    <td><textarea class="default" name="material"></textarea></td>
+                </tr>
+                <tr align="center">
+                    <td>색상</td>
+                    <td><textarea class="default" name="color"></textarea></td>
+                </tr>
+                <tr align="center">
+                    <td>치수</td>
+                    <td><textarea class="default" name="size"></textarea></td>
+                </tr>
+                <tr align="center">
+                    <td>제조자(수입자)</td>
+                    <td><textarea class="default" name="producer"></textarea></td>
+                </tr>
+                <tr align="center">
+                    <td>제조국</td>
+                    <td><textarea class="default" name="madeIn"></textarea></td>
+                </tr>
+                <tr align="center">
+                    <td>취급시 주의사항</td>
+                    <td><textarea class="default" name="precautions"></textarea></td>
+                </tr>
+                <tr align="center">
+                    <td>제조연월</td>
+                    <td><textarea class="default" name="manufacturedDate"></textarea></td>
+                </tr>
+                <tr align="center">
+                    <td>품질보증기준</td>
+                    <td><textarea class="default" name="qualityAssuranceStandard"></textarea></td>
+                </tr>
+                <tr align="center">
+                    <td>A/S 책임자와 전화번호</td>
+                    <td><textarea class="default" name="afterServiceAddress"></textarea></td>
                 </tr>
             </table>
+            <button type="button" class="btn btn-default" onclick="closeInformation(this)">등록하기</button>
         </div>
-        <button id="btn-save" type="button">등록하기</button>
     </div>
-</div>
-<div class="hover-information 1">
-    <span class="helper"></span>
-    <div class="information">
-        <p>아이템의 고시정보를 입력하세요.</p>
-        <table border="1">
-            <tr align="center">
-                <td>고시정보명</td>
-                <td>내용</td>
-            </tr>
-            <tr align="center">
-                <td>제품 소재</td>
-                <td><textarea class="default" name="material"></textarea></td>
-            </tr>
-            <tr align="center">
-                <td>색상</td>
-                <td><textarea class="default" name="color"></textarea></td>
-            </tr>
-            <tr align="center">
-                <td>치수</td>
-                <td><textarea class="default" name="size"></textarea></td>
-            </tr>
-            <tr align="center">
-                <td>제조자(수입자)</td>
-                <td><textarea class="default" name="producer"></textarea></td>
-            </tr>
-            <tr align="center">
-                <td>제조국</td>
-                <td><textarea class="default" name="madeIn"></textarea></td>
-            </tr>
-            <tr align="center">
-                <td>취급시 주의사항</td>
-                <td><textarea class="default" name="precautions"></textarea></td>
-            </tr>
-            <tr align="center">
-                <td>제조연월</td>
-                <td><textarea class="default" name="manufacturedDate"></textarea></td>
-            </tr>
-            <tr align="center">
-                <td>품질보증기준</td>
-                <td><textarea class="default" name="qualityAssuranceStandard"></textarea></td>
-            </tr>
-            <tr align="center">
-                <td>A/S 책임자와 전화번호</td>
-                <td><textarea class="default" name="afterServiceAddress"></textarea></td>
-            </tr>
-        </table>
-        <input type="button" value="등록하기" onclick="closeInformation()">
-    </div>
-</div>
+</form>
 
-
-<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="/js/seller.js"></script>
+{{>include/seller/footer}}
 <script>
     let rows = 1;
     $('.btn-newRow').click(function(){
         addRow(++rows);
         addClothes(rows);
     });
-    post.init("pants");
 </script>
 
 </body>
