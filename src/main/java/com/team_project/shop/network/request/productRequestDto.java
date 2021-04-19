@@ -38,15 +38,20 @@ public class productRequestDto {
             List<MultipartFile> detailImages = request.getFiles("detailImage");
             String[] detailImageKeys = request.getParameterValues("detailImageKey");
             this.mainImageMap = new HashMap<>();
-            for(int i=0;i<mainImages.size();i++){
-                var key = Integer.parseInt(mainImageKeys[i])-1;
-                this.mainImageMap.put(key,mainImages.get(i));
+            if(mainImageKeys!=null){
+                for(int i=0;i<mainImageKeys.length;i++){
+                    var key = Integer.parseInt(mainImageKeys[i])-1;
+                    this.mainImageMap.put(key,mainImages.get(key));
+                }
             }
             this.detailImageMap = new HashMap<>();
-            for(int i=0;i<detailImages.size();i++){
-                var key = Integer.parseInt(detailImageKeys[i])-1;
-                this.detailImageMap.put(key,detailImages.get(i));
+            if(detailImageKeys!=null){
+                for(int i=0;i<detailImageKeys.length;i++){
+                    var key = Integer.parseInt(detailImageKeys[i])-1;
+                    this.detailImageMap.put(key,detailImages.get(key));
+                }
             }
+
         }
 
         public Products toProductEntity(Users user, Category category){

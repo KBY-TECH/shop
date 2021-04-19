@@ -356,7 +356,7 @@ public class ProductController {
 
     @PostMapping("/sportswear")
     public String createSportswear(MultipartHttpServletRequest request, @LoginUser SessionUser user){
-        Category category = productService.findCategory("Sportswear");
+        Category category = productService.findCategory("SportsWear");
         Users userResult = usersRepository.findById(user.getId()).get();
         productRequestDto.SportswearDto dto = productRequestDto.SportswearDto.builder().request(request).build();
         Products product = dto.getProductDto().toProductEntity(userResult, category);
@@ -403,7 +403,7 @@ public class ProductController {
 
     @PostMapping("/top")
     public String createTop(MultipartHttpServletRequest request, @LoginUser SessionUser user){
-        Category category = productService.findCategory("Outer");
+        Category category = productService.findCategory("Top");
         productRequestDto.TopDto dto = productRequestDto.TopDto.builder().request(request).build();
         Users userResult = usersRepository.findById(user.getId()).get();
         Products product = dto.getProductDto().toProductEntity(userResult, category);
@@ -440,7 +440,7 @@ public class ProductController {
                 Top inform = (Top)option.getInformation();
                 dto.updateInformation(i,inform);
                 dto.getProductDto().updateOption(i,option,
-                        productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product),
+                         productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product),
                         productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
             }
         }
@@ -463,7 +463,7 @@ public class ProductController {
             Product_Options option = dto.getProductDto().toProductOptionEntity(i,product,mainImage,detailImage ,inform);
             productService.saveOption(option);
         }
-        return "";
+        return "redirect:/api/product/seller/user";
     }
 
     @PutMapping("/underwear/{productId}")
@@ -582,9 +582,11 @@ public class ProductController {
                 Product_Options option = options.get(i);
                 Bag inform = (Bag)option.getInformation();
                 dto.updateInformation(i,inform);
+                Images mainImage =productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product);
+                Images detailImage =productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product);
                 dto.getProductDto().updateOption(i,option,
-                        productService.updateImage(option.getMainImage(),dto.getProductDto().getMainImageMap().get(i),i+"_main.jpg",product),
-                        productService.updateImage(option.getDetailImage(),dto.getProductDto().getDetailImageMap().get(i),i+"_detail.jpg",product));
+                        mainImage,
+                        detailImage);
             }
         }
 
