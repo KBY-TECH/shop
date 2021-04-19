@@ -2,6 +2,7 @@ let selectedOption;
 $('[name="select-option"]').each(function(index){
     if(index==0){
         selectedOption = $(this).val();
+        console.log(selectedOption);
         $('div .'+selectedOption).show();
     }
 });
@@ -13,3 +14,22 @@ $('select[name="option"]').on('change',function(){
 function toCart(){
 
 }
+
+
+$('a[href="#Description"]').on('click',function(event){
+    event.preventDefault();
+    $('.in.active').removeClass('in active');
+    $('div .Description').addClass('in active');
+})
+
+$('a[href="#Information"]').on('click',function(event){
+    event.preventDefault();
+    $('.in.active').removeClass('in active');
+    $('div .Information').addClass('in active');
+});
+$('a[href="#Reviews"]').on('click',function(event){
+    event.preventDefault();
+    $('.in.active').removeClass('in active');
+    $('div .Reviews').addClass('in active');
+});
+
