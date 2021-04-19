@@ -7,9 +7,9 @@ INSERT INTO CATEGORY values
 (6,now(),now(),'PADDING','Padding',1),
 (7,now(),now(),'OUTER','Outer',1),
 (8,now(),now(),'UNDERWEAR','UnderWear',1),
-(9,now(),now(),'SPORTSWEAR','SportsWear',1),
+(9,now(),now(),'SPORTS_WEAR','SportsWear',1),
 (10,now(),now(),'BAG','Bag',2),
 (11,now(),now(),'WALLET','Wallet',2),
 (12,now(),now(),'MEAT','Meat',3),
 (13,now(),now(),'SEA_FOOD','SeaFood',3),
-(14,now(),now(),'FROZENFOOD','FrozenFood',3);
+(14,now(),now(),'FROZEN_FOOD','FrozenFood',3);
